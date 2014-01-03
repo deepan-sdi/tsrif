@@ -1,0 +1,46 @@
+<?php
+if($this->controller == 'Cms\Controller\User')
+	$url = $this->url('cms', array('controller' => 'user', 'action' => 'view-user'));
+else if($this->controller == 'Cms\Controller\Carrier')
+	$url = $this->url('cms', array('controller' => 'carrier', 'action' => 'view-carrier'));
+else if($this->controller == 'Cms\Controller\Language')
+	$url = $this->url('cms', array('controller' => 'language', 'action' => 'view-language'));
+else if($this->controller == 'Cms\Controller\Faq') {
+	$url = ($this->opt == 1) ? $this->url('cms', array('controller' => 'faq', 'action' => 'view-category')) : $this->url('cms', array('controller' => 'faq', 'action' => 'view-faq'));
+} else if($this->controller == 'Cms\Controller\Content') {
+	$url = ($this->opt == 1) ? $this->url('cms', array('controller' => 'content', 'action' => 'view-page-values')) : $this->url('cms', array('controller' => 'content', 'action' => 'view-page'));
+}
+$perPageCount	= intval($this->perPage);
+
+//handle parameter get :)
+$parameterGet = '';	//$parameterGet = $this->Requesthelper();
+if ($parameterGet != ""){
+  $parameterGet = "?".$parameterGet;
+}
+?>
+<?php if ($this->pageCount): ?>
+<div id="DataTables_Table_0_info" class="dataTables_info" style="padding-left: 15px;">Showing <?php	echo (($this->current - 1) * $perPageCount) + 1; ?> to <?php	if(($this->current * $perPageCount) < $this->totalItemCount) echo ($this->current * $perPageCount); else echo $this->totalItemCount; ?> of <?php	echo $this->totalItemCount; ?> entries</div>
+<div class="span12 center">
+	<div class="dataTables_paginate paging_bootstrap pagination">
+		<ul>
+	      <?php if (isset($this->previous)): ?>
+		  <li class="prev"><a href='#' onclick="loadDiv('listingDiv', '<?php echo $url.'/'.$this->previous.$parameterGet; ?>', '', '');"><< Previous</a></li>
+	      <?php else: ?>
+		  <li class="prev disabled"><a href="#"><< Previous</a></li>
+	      <?php endif; ?>
+	      <?php foreach ($this->pagesInRange as $page): ?>
+	      <?php if ($page != $this->current): ?>
+	      <li ><a href='#' onclick="loadDiv('listingDiv', '<?php echo $url.'/'.$page.$parameterGet; ?>', '', '');"><?php echo $page; ?></a></li>
+	      <?php else: ?>
+		  <li class="active"><a href="#"><?php echo $page; ?></a></li>
+	      <?php endif; ?>
+	      <?php endforeach; ?>
+	      <?php if (isset($this->next)): ?>
+		  <li class="next"><a href="#" onclick="loadDiv('listingDiv', '<?php echo $url.'/'.$this->next.$parameterGet; ?>', '', '');">Next >> </a></li>
+		  <?php else: ?>      	
+		  <li class="next disabled"><a href="#">Next >> </a></li>
+	      <?php endif; ?>
+    	</ul>
+	</div>
+</div>
+<?php endif; ?>

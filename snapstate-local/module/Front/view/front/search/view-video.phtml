@@ -1,0 +1,131 @@
+<?php	echo $this->render('sub-header.phtml');
+		//	Session
+		use Zend\Session\Container;
+		$userSession= new Container('fo_user');
+		$youtubeID	= $this->customurl($videoArray['media_url'], 'fetchYoutubeID');
+		$videoTitle	= $videoArray['media_title'];
+		$description= $videoArray['media_description'];
+		$encodedID	= base64_encode((string)$videoArray['_id']);
+		$autoplay	= 0;
+		if(MAILER) {
+			$autoplay	= 1;
+		}	?>
+	<style type="text/css">
+		.at16nc, .at300bs {
+			background: none;
+		}
+	</style>
+	<h3 class="page-title visible-xs"><?php	echo $videoTitle; ?></h3>
+
+	<!--Desktop view-->
+	<div class="row hidden-xs" id="title_segment">
+    	<h2 class="page-title col-md-7 col-lg-8"><?php	echo $videoTitle; ?></h2>
+	</div>
+    <!--Desktop view-->
+	
+	<dl class="row contribute-video" id="video_segment">
+		<dd class="col-md-7 col-lg-8 col-xs-12 videoFrame big-head">
+			<div class="row">
+            	<div class="col-xs-12 col-md-12">
+                	<div class="videoview">
+                    	<iframe src="http://youtube.com/embed/<?php	echo $youtubeID; ?>?rel=0&wmode=transparent&autoplay=<?php	echo $autoplay; ?>" frameborder="0" allowfullscreen></iframe>
+					</div>
+				</div>
+                <div class="col-xs-12 col-md-12">    
+                	<div class="row">
+                    	<div class="col-md-6 col-xs-12">
+                        	<span class="note">Length: <?php echo $videoArray['media_length']; ?></span>
+                            <ul class="users"> 
+<?php						if(isset($extended['media'][(string)$videoArray['_id']]) && is_array($extended['media'][(string)$videoArray['_id']]) && count($extended['media'][(string)$videoArray['_id']]) > 0) {
+								$inc 	= 0;
+								$userCount	= count($extended['media'][(string)$videoArray['_id']]);
+								$iuserCount	= ($userCount > 4) ? 3 : 4;
+								foreach($extended['media'][(string)$videoArray['_id']] as $ikey => $ivalue) {
+									if($inc < $iuserCount) {
+										
+										$userPhoto	= (isset($extended['friends'][$ivalue]['user_photo']) && trim($extended['friends'][$ivalue]['user_photo']) != '') ? '/Front/users/photo/thumb/'.$extended['friends'][$ivalue]['user_photo'] : '/Front/users/photo/thumb/no_photo.png';
+										$userPhoto	= (file_exists(getcwd().'/public/'.$userPhoto)) ? $userPhoto : '/Front/users/photo/thumb/no_photo.png'; ?>
+                        	<li><a href="#"><img src="<?php echo $userPhoto; ?>" width="30" height="30" alt="<?php echo ucwords($extended['friends'][$ivalue]['user_firstname'].' '.$extended['friends'][$ivalue]['user_lastname']); ?>" title="<?php echo ucwords($extended['friends'][$ivalue]['user_firstname'].' '.$extended['friends'][$ivalue]['user_lastname']); ?>"></a></li>
+<?php								}
+									$inc++;
+								}
+								if(count($extended['media'][(string)$videoArray['_id']]) > 4) {	?>
+							<li class="more"><a href="#" onclick="showExtendedFriends('<?php echo (string)$videoArray['_id']; ?>');return false;">4+</a></li>
+<?php							}
+							} else { ?>
+							<li><a href="#" style="opacity:0;"></a></li>
+<?php						} ?>
+							</ul> 
+						</div>                                            
+                        <div class="col-md-3 col-xs-6">
+                        	<span class="note">Share</span>
+                            <ul class="s-share">
+<?php	$FbDescription	= preg_replace("/[\r\n]+/", "\n", $description);
+		$FbDescription	= preg_replace('/\s+/', ' ', $FbDescription);	?>
+								<li><a href="#" onclick='shareonfb("<?php	echo FB_APPID; ?>", "<?php	echo strip_tags(addslashes($videoTitle)); ?>", "<?php	echo strip_tags(addslashes($videoTitle)); ?>", "<?php echo DOMAINPATH.'/video/'.$encodedID; ?>", "<?php echo strip_tags(addslashes($FbDescription)); ?>", "http://img.youtube.com/vi/<?php	echo $youtubeID; ?>/0.jpg", "<?php	echo REDIRECT_URL; ?>");' class="icon-fb"></a></li>
+								<li><a href="#" class="icon-twitter addthis_button_twitter"></a></li>
+							</ul>
+						</div>
+                        <div class="col-md-3 col-xs-6">
+                        	<ul class="likes">
+                            	<li style="margin-right:10px;">
+                                	<span class="note" id="likebar"><?php echo $like; ?></span>
+									<a class="like" href="#" onclick='dovote(1, "<?php	echo $encodedID; ?>", "<?php	echo $videoTitle; ?>");return false;'><i class="fa fa-2x fa-thumbs-up"></i></a>
+								</li>
+                                <li>
+                                	<span class="note" id="dislikebar"><?php echo $dislike; ?></span>
+                                    <a class="dislike" href="#" onclick='dovote(2, "<?php	echo $encodedID; ?>", "<?php	echo $videoTitle; ?>");return false;'><i class="fa fa-2x fa-thumbs-down"></i></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-md-12">
+                	<div class="contribute" style="margin-top:10px;">
+<?php	if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') {	?>
+						<button class="add-playbtn" data-toggle="modal" data-target="#add-playlist">Add to Playlist</button>
+						<input type="Hidden" id="pl_video_id" value="<?php	echo $videoArray['_id']; ?>">
+<?php	} ?>
+                        <p><span>Description: </span></p>
+                        <p><?php	echo $description; ?></p>
+					</div>
+				</div>
+                <div class="col-xs-12 col-md-12">
+                	<div class="face-com" style="padding-top:0;">
+<?php	if(MAILER) {
+			$commentsUrl	= "http://snapstate.sdiphp.com/video/".$encodedID;
+		} else {
+			$commentsUrl	= "http://snapstate.sdiphp.com/front/index/index";
+		}	?>
+                    	<p><span>Leave Comment</span></p>
+						<div class="fb-comments" data-href="<?php echo $commentsUrl; ?>" data-numposts="5" data-colorscheme="light" data-mobile="false"></div><!-- http://snapstate.sdiphp.com/front/search/<?php	//echo base64_encode((string)$videoArray['_id']); ?> -->
+					</div>
+				</div>
+			</div>
+		</dd>
+	</dl>
+		
+<script type="text/javascript">
+	var addthis_share = {
+		templates : {
+			twitter : "Friends, Check it out '<?php echo $videoTitle; ?>' video in Snapstate.com - <?php echo DOMAINPATH.'/video/'.$encodedID; ?>"
+		}
+	}
+</script>
+<script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-516d13f2076fbb6e"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		/*	if($('#title_segment').length) {
+			
+		}	*/
+		
+		if($('#video_segment').length) {
+			$.get('/front/search/recommended-videos', function(data){
+				if($.trim(data) != '') {
+					$('#video_segment').append(data);
+					$('#title_segment').append('<h3 class="col-md-5 recom-h3 col-lg-4">Recommended Videos</h3>');
+				}
+			});
+		}
+	});
+</script>

@@ -1,0 +1,38 @@
+<!-- <link rel="stylesheet" href="/Front/js/lib/themes/classic.css" id="theme_base">
+<link rel="stylesheet" href="/Front/js/lib/themes/classic.date.css" id="theme_date">
+<body>
+	<input id="date_demo__events" class="fieldset__input  picker__input " readonly="" type=text placeholder="Open your console and try me&hellip;">
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="/Front/js/lib/picker.js"></script>
+<script src="/Front/js/lib/picker.date.js"></script>
+<script src="/Front/js/lib/picker.time.js"></script>
+<script src="/Front/js/lib/legacy.js"></script>
+<script src="/Front/js/lib/main.js"></script>
+</body> -->
+<script type="text/javascript" src="/Front/js/vendor/jquery-1.10.1.min.js"></script>
+<script type="text/javascript" src="/Front/js/front.js"></script>
+<div id="fb-root"></div>
+<div onclick='inviteViaFB("<?php echo FB_APPID; ?>", "<?php echo FB_INVITATION_MSG; ?>", "<?php echo REDIRECT_URL.'/fbreturn/'; ?>");'>test</div>
+
+<p onclick='inviteViaFB("<?php echo FB_APPID; ?>", "<?php echo FB_INVITATION_MSG; ?>", "<?php echo REDIRECT_URL.'/fbreturn/'; ?>");' style="cursor:pointer;">Invite Facebook Friends</p>
+<script src="https://connect.facebook.net/en_US/all.js"></script>
+<script>
+
+var APP_ID="<?php echo FB_APPID; ?>";
+	
+	//window.fbAsyncInit = function() {
+		FB.init({
+			  appId  : APP_ID,
+			  status : true,
+			  cookie : false,
+			  xfbml  : true
+		});
+	//};
+(function() {
+		var e = document.createElement('script');
+		e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		e.async = true;
+		document.getElementById('fb-root').appendChild(e);
+		}());
+</script>

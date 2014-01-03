@@ -1,0 +1,34 @@
+<?php		$pageParams	= $this->cms();	//	Result: controller => Cms\Controller\Index,  action => index
+			if($pageParams['controller'] == 'Cms\Controller\Index' && $pageParams['action'] == 'index') {
+				$pageType	= 1;
+			} else {
+				$pageType	= 0;
+			}	?>
+			<?php	if(!isset($pageType) || !$pageType)	{ ?>
+				</div>
+			<?php	} ?>
+			</div>
+			<?php	if(!isset($pageType) || !$pageType)	{ ?>
+			<hr>
+			<footer>
+				<p class="" align="center">&copy; <a href="#" target="_blank">Snapstate - Admin Panel</a> <?php	echo $this->datetime(time(), 0, 'Y'); ?></p>
+			</footer>
+			<?php	} ?>
+		</div>
+	</div>
+	</div>
+	<noscript>
+		<div class="alert alert-block span10" style="margin-top:30px;">
+			<h4 class="alert-heading">Warning!</h4>
+			<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+		</div>
+	</noscript>
+	
+</body>
+</html>
+
+<script type="text/javascript">
+	$(window).load(function(){
+		$('#bodyDiv').css('display', 'block');
+	});
+</script>

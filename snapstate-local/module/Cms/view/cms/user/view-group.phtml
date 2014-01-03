@@ -1,0 +1,109 @@
+<?php	$listRolesArray	= array();
+		foreach($this->rolesArray as $key => $value) {
+			$id						= (string)$value['_id'];
+			$listRolesArray[$id]	= $value['role_name'];
+		}	?>
+	<div class="box span12">
+		<?php	if(count($records) > 0) { ?>
+		<div class="box-header well" data-original-title style="cursor:pointer;">
+			<h2><i class="icon-th-list"></i> List User Groups</h2>
+			<div class="box-icon">
+			</div>
+		</div>
+		<div class="box-content">
+			<div class="row-fluid">
+				<div class="span6" style="padding-bottom:6px">
+					<div id="DataTables_Table_0_length" class="dataTables_length">
+						<label>
+							<select name="DataTables_Table_0_length" size="1" aria-controls="DataTables_Table_0" onchange='callPerPage("group-listcount", this.value);'>
+								<option value="10" <?php	if($this->perPage == 10) echo 'selected="selected"' ?>>10</option>
+								<option value="25" <?php	if($this->perPage == 25) echo 'selected="selected"' ?>>25</option>
+								<option value="50" <?php	if($this->perPage == 50) echo 'selected="selected"' ?>>50</option>
+								<option value="100" <?php	if($this->perPage == 100) echo 'selected="selected"' ?>>100</option>
+							</select> records per page</label>
+					</div>
+				</div>
+				<div class="span6" style="display:none;">
+					<div class="dataTables_filter" id="DataTables_Table_0_filter">
+						<label style="display: none;">Search: <input type="text" aria-controls="DataTables_Table_0"></label>
+					</div>
+				</div>
+			</div>
+			<table class="table table-striped table-bordered bootstrap-datatable datatable">
+			  <thead>
+				  <tr>
+					  <th style="cursor:pointer;" width="15%" onclick="loadDiv('listingDiv', '/group-list', 'group_name', '<?php	if($this->sortBy == 'group_name') { echo '1'; } else { echo '0'; } ?>');">Group Name</th>
+					  <th width="15%">Role</th>
+					  <th style="cursor:pointer;" width="10%" onclick="loadDiv('listingDiv', '/group-list', 'group_status', '<?php	if($this->sortBy == 'group_status') { echo '1'; } else { echo '0'; } ?>');">Status</th>
+					  <th width="30%">Actions</th>
+				  </tr>
+			  </thead>   
+			  <tbody>
+			  <?php		foreach($records as $key => $row) : ?>
+				<tr>
+					<td><?php	if(strlen($row['group_name']) > 20) echo substr($row['group_name'], 0, 20) . '...'; else echo $row['group_name']; ?></td>
+					<td><?php	if(isset($listRolesArray[$row['group_role']]) && strlen($listRolesArray[$row['group_role']]) > 20) echo substr($listRolesArray[$row['group_role']], 0, 20) . '...'; else if(isset($listRolesArray[$row['group_role']])) echo $listRolesArray[$row['group_role']]; ?></td>
+					<td class="center">
+						<span><?php	if($row['group_status'] == 0) echo 'Inactive'; else echo 'Active'; ?></span>
+					</td>
+					<td class="center">
+						<a class="btn btn-success view-user" href="#" 
+							onclick='setGroupValues("<?php	echo stripslashes(str_replace(array("'", '"'), array('&lsquo;', '&ldquo;'), $row['group_name'])); ?>", "<?php	if(isset($listRolesArray[$row['group_role']])) { echo stripslashes(str_replace(array("'", '"'), array('&lsquo;', '&ldquo;'), $listRolesArray[$row['group_role']])); } ?>", "<?php	if($row['group_status'] == 1) echo 'Active'; else echo 'Inactive'; ?>");'>
+							<i class="icon-zoom-in icon-white"></i>  
+							View                                            
+						</a>
+						<?php	$recordId	= (string)$row['_id']; ?>
+						<a class="btn btn-info" href="<?php	echo $this->url('cms', array('controller' => 'user', 'action' => 'edit-group', 'id' => $recordId)); ?>">
+							<i class="icon-edit icon-white"></i>  
+							Edit                                            
+						</a>
+						<a class="btn btn-danger" style="cursor:pointer;" onclick="deleteGroup('<?php	echo $row['_id']; ?>', '<?php	if(count($records) > 1) { echo $this->page; } else { echo ($this->page - 1); } ?>');">
+							<i class="icon-trash icon-white"></i> 
+							Delete
+						</a>
+					</td>
+				</tr>
+				<?php	endforeach; ?>							
+			  </tbody>
+		  </table>          
+		</div>
+		<?php		//echo ( count($records) > 0 ) ? $this->paginationControl($records, 'Sliding', 'pagination.phtml', array('controller' => $this->controller, 'perPage' => $this->perPage)) : "";
+					$url = $this->url('cms', array('controller' => 'user', 'action' => 'view-group'));
+					if(count($records) > 0) {
+						//handle parameter get :)
+						$parameterGet = '';	//$parameterGet = $this->Requesthelper();
+						if ($parameterGet != "") {
+							$parameterGet = "?".$parameterGet;
+						}	?>
+						<div id="DataTables_Table_0_info" class="dataTables_info" style="padding-left: 15px;">Showing <?php	echo (($page - 1) * $perPage) + 1; ?> to <?php	if(($page * $perPage) < $totalRecords) echo ($page * $perPage); else echo $totalRecords; ?> of <?php	echo $totalRecords; ?> entries</div>
+							<div class="span12 center">
+								<div class="dataTables_paginate paging_bootstrap pagination">
+									<ul>
+								      <?php if ($page > 1): ?>
+									  <li class="prev"><a href='#' onclick="loadDiv('listingDiv', '<?php echo $url.'/'.($page-1).$parameterGet; ?>', '', '');"><< Previous</a></li>
+								      <?php else: ?>
+									  <li class="prev disabled"><a href="#"><< Previous</a></li>
+								      <?php endif; ?>
+<?php										for($inc = 1; $inc <= ceil($totalRecords / $perPage); $inc++) {	?>
+								      <?php if ($page != $inc): ?>
+								      <li ><a href='#' onclick="loadDiv('listingDiv', '<?php echo $url.'/'.$inc.$parameterGet; ?>', '', '');"><?php echo $inc; ?></a></li>
+								      <?php else: ?>
+									  <li class="active"><a href="#"><?php echo $inc; ?></a></li>
+								      <?php endif; ?>
+								      <?php } ?>
+								      <?php if ($page < ceil($totalRecords / $perPage)): ?>
+									  <li class="next"><a href="#" onclick="loadDiv('listingDiv', '<?php echo $url.'/'.($page+1).$parameterGet; ?>', '', '');">Next >> </a></li>
+									  <?php else: ?>      	
+									  <li class="next disabled"><a href="#">Next >> </a></li>
+								      <?php endif; ?>
+							    	</ul>
+								</div>
+							</div>
+		<?php		}
+				} else { ?>
+		<div style="text-align:center;padding-top:3px">
+		  	No Records found.
+		</div>
+		<?php	} ?>
+	</div>
+	

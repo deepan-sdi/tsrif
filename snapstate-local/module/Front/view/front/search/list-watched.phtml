@@ -1,0 +1,71 @@
+<?php	$newResultArray	= array();
+		if(is_array($records) && count($records) > 0) {
+			foreach($records as $key => $value) {
+				$newResultArray[(string)$value['_id']]	= $value;
+			}
+		}
+		
+		if(is_array($mediaArray) && count($mediaArray) > 0) {
+			foreach($mediaArray as $key => $value) {
+				$videoUrl	= '/video/'.base64_encode((string)$value['id']);
+				$dateArray	= explode(' ', $value['date']);
+				$date		= explode('/', $dateArray[0]);
+				$dateStr	= date('l, F jS, Y', mktime(0, 0, 0, $date[0], $date[1], $date[2]));	?>
+	<dd class="col-md-6 col-xs-12 videoFrame big-head">
+		<div class="row">
+        	<div class="col-xs-12 col-md-12">
+            	<div class="video">
+					<a title="<?php echo $newResultArray[$value['id']]['media_title']; ?>" href="<?php	echo $videoUrl; ?>">
+						<img src="http://img.youtube.com/vi/<?php echo $this->customurl($newResultArray[$value['id']]['media_url'], 'fetchYoutubeID'); ?>/0.jpg" title="<?php echo $newResultArray[$value['id']]['media_title']; ?>" alt="<?php echo $newResultArray[$value['id']]['media_title']; ?>">
+						<span class="play-btn"><i class="fa fa-play fa-2"></i></span>
+					</a>
+				</div>
+			</div>
+            <div class="col-xs-12 col-md-12">
+            	<h4><a title="<?php echo $newResultArray[$value['id']]['media_title']; ?>" href="<?php	echo $videoUrl; ?>"><?php echo $newResultArray[$value['id']]['media_title']; ?></a></h4>
+				<div class="row">                                        
+                   	<div class="col-xs-12 pull-left">
+                       	<p><span>Last viewed:</span> <?php echo $dateStr; ?></p>
+                        <p><span>Seen:</span> <?php echo $value['views']; ?> Times</p>
+					</div>
+				</div>
+			</div>
+              	<div class="col-xs-12 col-md-12">
+               	<div class="face-com">
+<?php		$encodedID	= base64_encode((string)$value['id']);
+			if(MAILER) {
+				$commentsUrl	= "http://snapstate.sdiphp.com/video/".$encodedID;
+			} else {
+				$commentsUrl	= "http://snapstate.sdiphp.com/front/index/index";
+			}	?>
+                   	<p class="fb_comments_p" data="<?php echo $commentsUrl; ?>"><span>Leave Comment</span></p>
+                      
+				</div>
+			</div>                                
+		</div>
+	</dd>
+<?php		}
+			if(($totalRecords - ($page * 2)) > 0) {	?>
+				<dd <?php echo 'TOTAL_'.$totalRecords; ?> class="clearfix pri-nextbtn">
+			    	<a <?php echo 'PAGE_'.$page; ?> class="btn <?php if($page != 1) { ?>btn-default<?php } else { ?>btn-pri<?php } ?>" href="#" onclick="<?php if($page != 1) { ?>loadWatched(1, 1);<?php } ?>return false;">Previous</a>
+			        <a class="btn btn-default" href="#" onclick="loadWatched(1,0);return false;">Next</a>
+				</dd>
+<?php		} else { ?>
+				<dd <?php echo 'TOTAL_'.$totalRecords; ?> class="clearfix pri-nextbtn">
+			    	<a <?php echo 'PAGE1_'.$page; ?> class="btn <?php if($page != 1) { ?>btn-default<?php } else { ?>btn-pri<?php } ?>" href="#" onclick="<?php if($page != 1) { ?>loadWatched(1, 1);<?php } ?>return false;">Previous</a>
+			        <a class="btn btn-next" href="#">Next</a>
+				</dd>
+<?php		}
+		} else { ?>
+		
+		<dd class="col-md-12 col-xs-12 videoFrame big-head">
+			<div class="row">
+	        	<div class="col-xs-12 col-md-12">
+					No videos found
+				</div>
+			</div>
+		</dd>
+		<div style="height:100px;"></div>
+		
+<?php	} ?>
+    

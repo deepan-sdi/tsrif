@@ -1,0 +1,26 @@
+<?php	if(is_array($records) && count($records) > 0) {
+			foreach($records as $key => $value) {
+				$userPhoto	= (isset($value['user_photo']) && trim($value['user_photo']) != '') ? '/Front/users/photo/thumb/'.$value['user_photo'] : '/Front/users/photo/thumb/no_photo.png';
+				$userPhoto	= (file_exists(getcwd().'/public/'.$userPhoto)) ? $userPhoto : '/Front/users/photo/thumb/no_photo.png';	?>
+	<dd class="col-md-4 col-xs-12 friends">
+    	<div class="fri-bb clearfix">
+        	<img src="<?php echo $userPhoto; ?>" alt="<?php echo ucwords($value['user_firstname'].' '.$value['user_lastname']); ?>"> 
+            <h1><?php echo ucwords($value['user_firstname'].' '.$value['user_lastname']); ?></h1>
+            <p><?php echo $value['user_dob']; ?></p>
+		</div>
+	</dd>
+<?php		}
+			if(($totalRecords - ($page * PERPAGE)) > 0) {	?>
+	<dd class="clearfix videoMore" id="more_videos">
+    	<p class="btn btn-default" onclick="loadFriends(1);">show 18 more</p>
+    </dd>
+<?php		} else { ?>
+	<dd class="clearfix videoMore" id="no_more_videos">
+    	<p class="btn nomore-btn">No more friends</p>
+	</dd>
+<?php		}
+		} else { ?>
+	<dd class="clearfix videoMore" id="no_more_videos">
+    	<p class="btn nomore-btn">No more friends</p>
+	</dd>
+<?php	} ?>

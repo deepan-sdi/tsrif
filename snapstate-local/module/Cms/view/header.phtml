@@ -1,0 +1,47 @@
+<?php	echo $this->doctype(); ?>
+<html lang="en">
+<head>
+<?php	$this->headMeta()->setCharset('utf-8');
+		$this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
+		echo $this->headTitle('Snapstate - Admin Panel');
+		echo $this->headMeta();
+		
+		$this->headLink()->appendStylesheet($this->basePath('css/bootstrap-journal.css'));
+		$this->headLink()->appendStylesheet($this->basePath('css/bootstrap-responsive.css'));
+		$this->headLink()->appendStylesheet($this->basePath('css/charisma-app.css'));
+		$this->headLink()->appendStylesheet($this->basePath('css/jquery-ui-1.8.21.custom.css'));
+		$this->headLink()->appendStylesheet($this->basePath('css/chosen.css'));
+		$this->headLink()->appendStylesheet($this->basePath('css/uniform.default.css'));
+		$this->headLink()->appendStylesheet($this->basePath('css/jquery.cleditor.css'));
+		$this->headLink(array('rel' => 'favicon', 'href' => '/images/favicon.ico'), 'PREPEND');
+		$this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => '/images/favicon.ico'), 'PREPEND');
+		echo  $this->headLink();
+		//$this->headStyle->captureStart();	?>
+		<style>
+		body {
+			padding-bottom: 40px;
+	  	}
+	  	.sidebar-nav {
+			padding: 9px 0;
+		}
+		.leftnavlink {
+			cursor: pointer
+		}
+		</style>
+<?php	//$this->headStyle->captureEnd();
+		echo $this->headScript();	?>
+	<!-- external javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+<?php	$this->headScript()->appendFile($this->basePath('js/html5.js'), 'text/javascript', array('conditional' => 'lt IE 9') );
+		$this->headScript()->appendFile($this->basePath('js/jquery-1.7.2.min.js'));
+		$this->headScript()->appendFile($this->basePath('js/jquery-ui-1.8.21.custom.min.js'));
+		$this->headScript()->appendFile($this->basePath('js/cms.js'));
+		$this->headScript()->appendFile($this->basePath('js/jquery.chosen.min.js'));
+		$this->headScript()->appendFile($this->basePath('js/jquery.uniform.min.js'));
+		$this->headScript()->appendFile($this->basePath('js/jquery.cleditor.min.js'));
+		$this->headScript()->appendFile($this->basePath('js/charisma.js'));
+		$this->headScript()->appendFile($this->basePath('js/jquery.validate.js'));
+		$this->headScript()->appendFile($this->basePath('js/common.js'));	?>
+<?php	echo $this->headScript(); ?>
+</head>

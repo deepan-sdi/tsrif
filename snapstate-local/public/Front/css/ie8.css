@@ -1,0 +1,10 @@
+.icon-friends, .icon-filter, .icon-share, .icon-upload, .icon-feedback, .icon-like{
+	width:32px;
+	height:32px;
+	background:url(../img/img-ie8.png) no-repeat;
+}
+.icon-filter{background-position:-32px 0;}
+.icon-share{background-position:-64px 0;}
+.icon-upload{background-position:-96px 0;}
+.icon-feedback{background-position:-128px 0;}
+.icon-like{background-position:-160px 0;}

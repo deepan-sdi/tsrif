@@ -1,0 +1,40 @@
+.progress-indicator {
+	top:0;
+	right:0;
+	width:100%;
+	height:100%;
+	position:fixed;
+	text-align:center;
+	/* IE filter */
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+	-moz-opacity:0.5;    /* Mozilla extension */
+	-khtml-opacity:0.5;  /* Safari/Conqueror extension */
+	opacity:0.5; /* CSS3 */
+	z-index:1200;
+	background-color:black;
+	display:none;
+}
+		
+.progress-indicator img {
+	left: 50%;
+	margin: -37px 0 0 -37px;
+	position: absolute;
+	top: 50%;
+}
+
+.ind-pop input[type="password"]{
+   width: 100%;
+}
+
+.folargeviews {
+	display: block;
+    float: none !important;
+    margin-left: 0 !important;
+    text-align: center
+}
+.fosmallviews {
+    float: none;
+    text-align: center;
+}
+.fb-comments, .fb-comments span[style], .fb-comments iframe[style] {width: 100% !important;}
+.fb-comments, .fb-comments iframe[style], .fb-comments span {width: 100% !important;}

@@ -1,0 +1,80 @@
+<?php	//	Session
+		use Zend\Session\Container;
+		$tempSession	= new Container('fo_temp_session');
+		$tagsArray		= $tempSession->tempSession['tags'];
+		$flagArray		= array('3' => 'offensive', 'irrelevant', 'duplicate', 'copyright', 'spam');
+		//if(MAILER) {
+			$autoplay	= 0;
+		//}
+		if(is_array($records) && count($records) > 0) {
+			foreach($records as $key => $value) {
+				$videoUrl	= '/video/'.base64_encode((string)$value['_id']);
+				$tempTagsArray	= array();
+				if(isset($tagNameArray[(string)$value['_id']])) {
+					foreach($tagsArray as $tagkey => $tagvalue) {
+						$tagId	= (string)$tagvalue['_id'];
+						if(in_array($tagId, $tagNameArray[(string)$value['_id']])) {
+							$tempTagsArray[]	= $tagvalue['tag_name'];
+						}
+					}
+				}	?>
+				<dd class="col-md-6 col-xs-12 videoFrame big-head">
+					<div class="row">
+                    	<div class="col-xs-12 col-md-12">
+							<div class="video">
+								<!-- <a href="<?php	echo $videoUrl; ?>" title="<?php echo $value['media_title']; ?>"> -->
+									<!-- <img src="http://img.youtube.com/vi/<?php echo $this->customurl($value['media_url'], 'fetchYoutubeID'); ?>/0.jpg" alt="<?php echo $value['media_title']; ?>" title="<?php echo $value['media_title']; ?>"> -->
+									<iframe src="http://youtube.com/embed/<?php echo $this->customurl($value['media_url'], 'fetchYoutubeID'); ?>?rel=0&wmode=transparent&autoplay=<?php	echo $autoplay; ?>" frameborder="0" allowfullscreen></iframe>
+								<!-- </a> -->
+							</div>
+						</div>
+                        <div class="col-xs-12 col-md-12">
+                        	<h4><a href="#<?php	//echo $videoUrl; ?>" title="<?php echo $value['media_title']; ?>"><?php echo $value['media_title']; ?></a></h4>
+							<div class="row">                                        
+                            	<div class="col-xs-12 contribute">
+								<?php	if(trim($value['media_description']) != '') { ?>
+                                	<p><span>Description: </span></p>
+                                    <p><?php echo $value['media_description']; ?></p>
+								<?php	} ?>
+								<?php	if(count($tempTagsArray) > 0) { ?>
+									<p><span>Tags:</span> <?php	echo implode(', ', $tempTagsArray); ?>.</p>
+								<?php	} else { ?>
+									<!-- <p>&nbsp;</p> -->
+								<?php	} ?>
+                                    <p><span>Suggested by:</span> <?php	echo ucwords($userNameArray[$value['user_id']]); ?></p>
+								</div>
+							</div>
+                            <div class="row">                                        
+                            	<div class="col-xs-12 contribute">
+                                	<a href="#" class="btn-blue" onclick="approveVideo('<?php echo (string)$value['_id']; ?>', 1);">Approve</a>  
+                                    <a href="#" class="btn-ornage" onclick="approveVideo('<?php echo (string)$value['_id']; ?>', 2);">Disapprove</a>
+                                    <label class="drop-dwn-arr2 wid-100">
+                                    	<select id="flag_<?php echo (string)$value['_id']; ?>" name="flag_<?php echo (string)$value['_id']; ?>">
+											<option value="">Pick a reason</option>
+											<?php	foreach($flagArray as $flagKey => $flagValue) { ?>
+											<option value="<?php echo $flagKey; ?>"><?php echo $flagValue; ?></option>
+											<?php	} ?>
+										</select>
+									</label>
+								</div>
+							</div>
+						</div>                                
+					</div>
+				</dd>
+<?php		}
+			if(($totalRecords - ($page * 2)) > 0) {	?>
+				<dd <?php echo 'TOTAL_'.$totalRecords; ?> class="clearfix pri-nextbtn">
+			    	<a <?php echo 'PAGE_'.$page; ?> class="btn <?php if($page != 1) { ?>btn-default<?php } else { ?>btn-pri<?php } ?>" href="#" onclick="<?php if($page != 1) { ?>loadContributed(1, 1);<?php } ?>return false;">Previous</a>
+			        <a class="btn btn-default" href="#" onclick="loadContributed(1,0);return false;">Next</a>
+				</dd>
+<?php		} else { ?>
+				<dd <?php echo 'TOTAL_'.$totalRecords; ?> class="clearfix pri-nextbtn">
+			    	<a <?php echo 'PAGE1_'.$page; ?> class="btn <?php if($page != 1) { ?>btn-default<?php } else { ?>btn-pri<?php } ?>" href="#" onclick="<?php if($page != 1) { ?>loadContributed(1, 1);<?php } ?>return false;">Previous</a>
+			        <a class="btn btn-next" href="#">Next</a>
+				</dd>
+<?php		}
+		} else { ?>
+			<dd class="clearfix pri-nextbtn">
+		        <h4 style="height:100px;">No videos found</h4>
+			</dd>
+<?php	} ?>

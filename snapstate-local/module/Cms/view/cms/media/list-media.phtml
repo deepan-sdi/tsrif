@@ -1,0 +1,196 @@
+<?php	echo $this->render('leftnav.phtml'); ?>
+<?php	if(isset($this->message) && trim($this->message) != '') {
+			$display	= 'display:block;';
+		} else {
+			$display	= 'display:none;';
+		}
+		$messageClass	= 'alert-success';
+		if(isset($this->errorMessage) && trim($this->errorMessage) == '1') {
+			$messageClass	= 'alert-error';
+		}	?>
+			<div>
+				<ul class="breadcrumb">
+					<li>
+						<a href="<?php	echo $this->url('cms', array('controller' => 'index', 'action' => 'dashboard')); ?>">Home</a> <span class="divider">/</span>
+					</li>
+					<li>
+						<a href="<?php	echo $this->url('cms', array('controller' => 'media', 'action' => 'list-media')); ?>">Manage Video</a> <span class="divider">/</span>
+					</li>
+					<li>
+						<a href="#">List Video</a>
+					</li>
+				</ul>
+			</div>
+			<div style="float:left; width: 100%;">
+			
+			<div class="alert <?php	echo $messageClass; ?>" id="userSuccessmsg" style="<?php	echo $display; ?>"> <?php	echo $this->message; ?></div>
+			
+			<div style="float:right;">
+				<a class="btn btn-primary" href="<?php	echo $this->url('cms', array('controller' => 'media', 'action' => 'create-media')); ?>">
+				<i class="icon-plus icon-white"></i>
+				Create Video
+				</a>
+			</div>
+			</div>
+			
+			<!-- Search Section Start-->
+			<div class="alert alert-block span14" style="float:left; margin-left:0px; margin-top: 6px;">
+				<h4 class="alert-heading" style="margin-bottom: 10px;">Filter</h4>
+<?php	$form = $this->filterForm;
+		$form->setAttribute('action', $this->url('cms', array('controller' => 'media', 'action' => 'list-media')));
+		$form->prepare();
+		echo $this->form()->openTag($form);	?>
+					<div class="control-group span3" style="min-height:60px;">
+						<div class="controls">
+						  <?php	echo $this->formRow($form->get('keyword')); ?>
+						</div>
+					</div>
+					<div class="control-group span3" style="min-height:60px;">
+						<div class="controls">
+						  <?php	$tempOptionsArray	= array('' => 'Select Option', 'media_title' => 'Title', 'media_url' => 'URL', 'media_description' => 'Description');
+						  		echo $this->formRow($form->get('selectOption')->setValueOptions($tempOptionsArray)); ?>
+						</div>
+					</div>
+					
+					<?php	$tempArray		= array();
+							$tempArray['']	= 'Select Category';
+							if(is_array($this->categoryArray) && count($this->categoryArray) > 0) {
+								foreach($this->categoryArray as $key => $value) {
+									$id				= (string)$value['_id'];
+									$tempArray[$id]	= $value['category_name'];
+								}
+							}	?>
+					<div class="control-group span3" style="min-height:60px;">
+						<div class="controls">
+						  <?php	echo $this->formRow($form->get('categoryFilter')->setValueOptions($tempArray)); ?>
+						</div>
+					</div>
+					<div class="control-group span3" style="min-height:60px;">
+						<div class="controls">
+						<?php	echo $this->formRow($form->get('approvalStatus')); ?>
+						</div>
+					</div>
+					<div class="control-group span3" style="margin-left:0px;">
+						<div class="controls">
+						<?php	echo $this->formRow($form->get('selectStatus')->setValueOptions(array('2' => 'Select Visibility', '1' => 'Active', '0' => 'Inactive'))); ?>
+						</div>
+					</div>
+					<div class="control-group span3" style="float:right;">
+						<div class="controls">
+							<?php	echo $this->formRow($form->get('submit')); ?>
+							<?php	echo $this->formRow($form->get('reset')); ?>
+						</div>
+					</div>
+					<div class="control-group span3" style="width: 190px;float:right;">
+						<div class="controls">
+						</div>
+					</div>
+<?php	echo $this->form()->closeTag();	?>
+			</div>
+			<!-- Search Section Ends-->
+			<div class="row-fluid" id="listingDiv">		
+			
+			</div>
+			
+			
+			<table class="table table-striped table-bordered bootstrap-datatable datatable" style="display:none;">
+			  <thead>
+				  <tr>
+					  <th style="width:<?php	echo $userwidth; ?>">First Name</th>
+					  <th style="width:<?php	echo $userwidth; ?>">Last Name</th>
+					  <th>Email</th>
+					  <th>Status</th>
+					  <th style="width:<?php echo $width; ?>">Actions</th>
+				  </tr>
+			  </thead>   
+			  <tbody>
+				<tr>
+					<td>FirstName</td>
+					<td>LastName</td>
+					<td>Email</td>
+					<td class="center">
+						<span>Status</span>
+					</td>
+					<td class="center">
+						<a class="btn btn-success view-user" href="#" id="innerViewButton">
+							<i class="icon-zoom-in icon-white"></i>  
+							View                                            
+						</a>
+						<a class="btn btn-info" href="edit_user.php">
+							<i class="icon-edit icon-white"></i>  
+							Edit                                            
+						</a>
+						<a class="btn btn-danger" href="#">
+							<i class="icon-trash icon-white"></i> 
+							Delete
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>            
+		<div class="modal  fade" id="viewUser" style="display:none;top:40%;width:80%;left:31%">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h2>View Video</h2>
+			</div>
+			<div class="modal-body">
+				<div class="box">
+					<div class="box-content">
+						<table class="table table-bordered table-striped">
+							<tbody>
+							  <tr>
+								<td width="30%"><strong>Title</strong></td>
+								<td id="view_title">Admin</td>
+							  </tr>
+							  <tr>
+								<td><strong>URL</strong></td>
+								<td id="view_url">Active</td>
+							  </tr>
+							  <tr>
+								<td><strong>Category</strong></td>
+								<td id="view_category">Active</td>
+							  </tr>
+							   <tr>
+								<td colspan="2"><strong>Description</strong></td>
+							  </tr>
+							  <tr>
+								<td colspan="2" style="font-size:11px;"><div id="view_description" style="height:70px;overflow:scroll">Active</div></td>
+							  </tr>
+							   <tr id="view_tags_tr">
+								<td><strong>Tags</strong></td>
+								<td id="view_tags">Active</td>
+							  </tr>
+							  <tr>
+								<td><strong>User</strong></td>
+								<td id="view_added_user">Active</td>
+							  </tr>
+							   <tr>
+								<td><strong>Created Date</strong></td>
+								<td id="view_added_date">Active</td>
+							  </tr>
+							   <tr>
+								<td><strong>Approval Status</strong></td>
+								<td id="view_approval_status">Active</td>
+							  </tr>
+							   <tr id="view_approved_user_tr">
+								<td><strong>Approved By</strong></td>
+								<td id="view_approved_user">Active</td>
+							  </tr>
+							   <tr id="view_approved_date_tr">
+								<td><strong>Approved Date</strong></td>
+								<td id="view_approved_date">Active</td>
+							  </tr>
+							   <tr>
+								<td><strong>Status</strong></td>
+								<td id="view_status">Active</td>
+							  </tr>
+							</tbody>
+						  </table>
+					</div>
+				</div>
+			</div>
+		</div>      
+<script type="text/javascript">
+	loadDiv('listingDiv', '/cms/media/view-media', '', '');
+	setTimeout("$('#userSuccessmsg').hide('slow')", 3000);
+</script>

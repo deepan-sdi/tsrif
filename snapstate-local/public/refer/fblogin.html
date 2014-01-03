@@ -1,0 +1,58 @@
+<html>
+<head></head>
+<body>
+<div id="fb-root"></div>
+<script>
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId      : '353997868079462',
+		    status     : true,
+			cookie     : true,
+			xfbml      : true
+		});
+	};
+	
+	(function(d){
+		var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement('script'); js.id = id; js.async = true;
+		js.src = "//connect.facebook.net/en_US/all.js";
+		ref.parentNode.insertBefore(js, ref);
+	}(document));
+	
+	function fetchFBUserInfo() {
+		FB.api('/me', function(response) {
+			if(response.email != undefined && response.first_name != undefined && response.last_name != undefined) {
+				console.log('Good to see you, ' + response.email + '.');
+				console.log('Good to see you, ' + response.first_name + '.');
+				console.log('Good to see you, ' + response.last_name + '.');
+			} else {
+				console.log("Error!");
+			}
+		});
+	}
+	
+	function fetchFriendsInfo() {
+		FB.api('/me/friends', function(response) {
+			if(response.data) {
+				var friends	= response.data;
+				for(x in friends) {
+					console.log(friends[x].name+'-'+friends[x].id);
+				}
+			} else {
+				console.log("Error!");
+			}
+		});
+	}
+  	
+	function fbLogin() {
+		FB.login(function(response) {
+			fetchFBUserInfo();
+			fetchFriendsInfo();
+		}, {scope: 'email,user_likes,read_stream,publish_stream'});
+	}
+	
+</script>
+<a href="#" onclick="fbLogin();">Login with Facebook</a>
+</body>
+</html>

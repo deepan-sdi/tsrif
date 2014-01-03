@@ -1,0 +1,68 @@
+<!doctype html>
+<!-- Conditional comment for mobile ie7 blogs.msdn.com/b/iemobile/ -->
+<!--[if IEMobile 7 ]>    <html class="no-js iem7" lang="en"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><html class="no-js" lang="en"> <![endif]-->
+	<head>
+<?php	/*	$this->headMeta()->setCharset('utf-8');
+		$this->headMeta()->appendName('description', '');
+		$this->headMeta()->appendName('HandheldFriendly', 'True');
+		$this->headMeta()->appendName('MobileOptimized', '320');
+		$this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
+		$this->headMeta()->appendHttpEquiv('cleartype', 'on');
+		$this->headMeta()->appendName('msapplication-TileImage', SITE_IMAGE_PATH.'touch/apple-touch-icon-144x144-precomposed.png');
+		$this->headMeta()->appendName('msapplication-TileColor', '#222222');
+		$this->headMeta()->appendName('apple-mobile-web-app-capable', 'yes');
+		$this->headMeta()->appendName('apple-mobile-web-app-status-bar-style', 'black');
+		$this->headMeta()->appendName('apple-mobile-web-app-title', '');	*/
+		echo $this->headTitle('Snapstate');
+		//echo $this->headMeta();
+		$this->headLink(array('rel' => 'apple-touch-icon-precomposed', 'sizes' => '144x144', 'href' => SITE_IMAGE_PATH.'touch/apple-touch-icon-144x144-precomposed.png'), 'APPEND');
+		$this->headLink(array('rel' => 'apple-touch-icon-precomposed', 'sizes' => '114x114', 'href' => SITE_IMAGE_PATH.'touch/apple-touch-icon-114x114-precomposed.png'), 'APPEND');
+		$this->headLink(array('rel' => 'apple-touch-icon-precomposed', 'sizes' => '72x72', 'href' => SITE_IMAGE_PATH.'touch/apple-touch-icon-72x72-precomposed.png'), 'APPEND');
+		$this->headLink(array('rel' => 'apple-touch-icon-precomposed', 'href' => SITE_IMAGE_PATH.'touch/apple-touch-icon-57x57-precomposed.png'), 'APPEND');
+		$this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => SITE_IMAGE_PATH.'touch/apple-touch-icon.png'), 'APPEND');	?>
+        <meta name="description" content="">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        
+        <meta http-equiv="cleartype" content="on">
+
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/Front/img/touch/apple-touch-icon-144x144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/Front/img/touch/apple-touch-icon-114x114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/Front/img/touch/apple-touch-icon-72x72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="/Front/img/touch/apple-touch-icon-57x57-precomposed.png">
+        <link rel="shortcut icon" href="/Front/img/touch/apple-touch-icon.png">
+        
+        <meta name="msapplication-TileImage" content="/Front/img/touch/apple-touch-icon-144x144-precomposed.png">
+        <meta name="msapplication-TileColor" content="#222222">
+        
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="">
+		
+        <script>(function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")</script>
+        
+        <!-- Main Stylesheet -->
+<?php	$this->headLink(array('rel' => 'stylesheet', 'href' => SITE_STYLE_PATH.'bootstrap.min.css'));
+		$this->headLink(array('rel' => 'stylesheet', 'href' => SITE_STYLE_PATH.'bootstrap-theme.css'));
+		$this->headLink(array('rel' => 'stylesheet', 'href' => SITE_STYLE_PATH.'large.css'));
+		$this->headLink(array('rel' => 'stylesheet', 'href' => SITE_STYLE_PATH.'front.css'));
+		$this->headLink(array('rel' => 'stylesheet', 'href' => SITE_STYLE_PATH.'chosen.css'));
+		echo  $this->headLink();	?>
+        <!--[if IE 8]><link rel="stylesheet" href="<?php echo SITE_STYLE_PATH; ?>ie8.css"><![endif]-->
+		<!--[if !IE]>-->
+		<link type="text/css" rel="stylesheet" media="only screen and (min-width: 320px) and (max-width: 1200px)" href="<?php echo SITE_STYLE_PATH; ?>small.css" />
+		<!--<![endif]-->
+<?php	$this->headScript()->appendFile(SITE_SCRIPT_PATH.'vendor/modernizr-2.6.2-respond-1.1.0.min.js'); ?>
+<?php	$this->headScript()->appendFile(SITE_SCRIPT_PATH.'vendor/jquery-1.10.1.min.js');	?>
+<?php	$this->headScript()->appendFile(SITE_SCRIPT_PATH.'chosen.jquery.js');	?>
+<?php	echo $this->headScript();	?>
+<?php	$this->headScript()->appendFile(SITE_SCRIPT_PATH.'vendor/bootstrap.min.js');
+		$this->headScript()->appendFile(SITE_SCRIPT_PATH.'mobile.js');
+		$this->headScript()->appendFile(SITE_SCRIPT_PATH.'main.js');
+		$this->headScript()->appendFile(SITE_SCRIPT_PATH.'front.js');
+		$this->headScript()->appendFile(SITE_SCRIPT_PATH.'ajaxfileupload.js');	?>
+<?php	//echo $this->headScript();	?>
+	</head>

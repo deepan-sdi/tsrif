@@ -1,0 +1,911 @@
+<?php	//	Session
+		use Zend\Session\Container;
+		$userSession	= new Container('fo_user');
+		$tempSession	= new Container('fo_temp_session');
+		$tempfSession	= new Container('fo_ftemp_session');
+		if(!MAILER) {
+			//echo '<pre>===>'; print_r((string)$userSession->userSession['_id']); echo '</pre>';
+		}	?>
+		<footer>
+        	<div class="footer-widgets">
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-xs-12">
+                            <h2>Site Navigation</h2>
+                            <ul class="siteNav">
+                                <li class="active"><a href="#">Home</a></li>
+                                <li><a href="#">Service</a></li>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Pricing</a></li>
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+
+
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-xs-12">
+                            <h2>Widget Header</h2>
+                            <p>This text is for dummy purpose only it will be replaced later. This text is for dummy purpose only it will be replaced later.</p>
+                            <p><a href="#">read more</a></p>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-xs-12 foot-newsletter">
+                            <h2>Sign up to our Newsletter</h2>
+                            <p>Enter your email address below to receive our monthly newsletter.</p>
+                            <form class="form-newsletter" name="newsletter_form" id="newsletter_form" method="post">
+                                <input type="email" class="form-control" placeholder="Enter Email address Here!" name="newsletter_email" id="newsletter_email">
+                                <input type="button" class="btn btn-default" value="Submit" id="newsletter_submit" name="newsletter_submit" onclick="validateNewsletter();">
+                            </form>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-xs-12">
+                            <h2>Contact us</h2>
+                            <address>SnapState Inc.<br>
+                                302, Marine Drice, San Antonio, <br>
+                                TX 55523<br>
+                                <br>
+                                +1 555 124 7689<br>
+                                <a href="mailto:info@snapstate.com">info@snapstate.com</a></address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="copyright row">
+                    
+					<div class="col-sm-6 col-xs-12 social pull-right">
+                        <a href="#"><img src="<?php	echo SITE_IMAGE_PATH; ?>social-icon-facebook.png" width="25" alt="facebook"></a> 
+						<a href="#"><img src="<?php	echo SITE_IMAGE_PATH; ?>social-icon-twitter.png" width="25" alt="twitter"></a> 
+						<a href="#"><img src="<?php	echo SITE_IMAGE_PATH; ?>social-icon-youtube.png" width="25" alt="youtube"></a> 
+						<a href="#"><img src="<?php	echo SITE_IMAGE_PATH; ?>social-icon-gplus.png" width="25" alt="plus"></a>
+                    </div>                    
+
+                    <div class="col-sm-6 col-xs-12">
+                        <p>&copy; Copyright 2013 SnapState.com.<br class="visible-xs"> All rights reserved. <span class="dis-inb"><a href="#">Privacy Policy</a><span class="pipeline">|</span><a href="#">Terms of service</a></span></p>                       
+                    </div>
+                  
+                </div>
+            </div>
+        </footer>
+			 
+
+			 </div>
+            </div></main>
+            </div>
+		
+<!-- Back to top -->
+		<div id="back-top"><a href="#top"><span></span></a></div>
+		<!-- Popup -->
+<?php	if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') {	?>
+		<link rel="stylesheet" href="/Front/js/lib/themes/default.css" id="theme_base">
+		<link rel="stylesheet" href="/Front/js/lib/themes/default.date.css" id="theme_date">
+       
+	<!-- Edit Profile Popup -->
+	<div id="edit_profile_popup" class="modal hide-in fade ind-pop-h2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <form name="edit_profile_form" id="edit_profile_form" method="post" enctype="multipart/form-data">
+			<div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#120;</button>
+                    <h3 id="myModalLabel">Edit Profile</h3>
+                </div>
+                <div class="modal-body ind-pop  pop-pad-mob" id="edit_profile_modal">
+					
+					<div class="row">
+					<?php	$userPhoto	= (isset($userSession->userSession['user_photo']) && trim($userSession->userSession['user_photo']) != '') ? '/Front/users/photo/thumb/'.$userSession->userSession['user_photo'] : '/Front/img/no_photo.png'; ?>
+						<div class="col-md-12">
+							<div class="avatar-img">
+								<img src="<?php	echo $userPhoto; ?>" id="user_avatar">	
+							</div>		
+						</div>
+						<div class="col-md-6 col-md-offset-3 dis-b">
+						  <div class="mar-b15">	
+							<input type="file" id="user_photo" name="user_photo" onchange="showPreview(this);" class="inp-nomar wid270">		
+							<input type="Hidden" id="user_photo_name" name="user_photo_name" value="<?php if(isset($userSession->userSession['user_photo']) && trim($userSession->userSession['user_photo']) != '') { echo $userSession->userSession['user_photo']; } ?>">
+							<span class="img-for">File size Max. 2MB. It can be jpg, gif, png & bmp</span>
+						</div>			
+					  </div>			
+					</div>
+				
+				
+                    <div class="row">
+                        <div class="col-md-6">
+							<label class="lab-style">First Name</label>
+                            <input type="text" value="<?php	if(isset($userSession->userSession['user_firstname']) && $userSession->userSession['user_firstname'] != '') { echo trim($userSession->userSession['user_firstname']); } ?>" placeholder="First Name" id="user_fname" name="user_fname" class="mar-b15">
+                         </div>                  
+                        <div class="col-md-6">
+							<label class="lab-style">Last Name</label>
+                            <input type="text" value="<?php	if(isset($userSession->userSession['user_lastname']) && $userSession->userSession['user_lastname'] != '') { echo trim($userSession->userSession['user_lastname']); } ?>" placeholder="Last Name" id="user_lname" name="user_lname" class="mar-b15">
+                        </div>
+                    </div>
+					<div class="row">
+                        <div class="col-md-6">
+							<label class="lab-style">Date of Birth</label>
+                            <input type="text" value="<?php	if(isset($userSession->userSession['user_dob']) && $userSession->userSession['user_dob'] != '') { echo trim($userSession->userSession['user_dob']); } else { echo "Date of Birth"; } ?>" id="user_dob" name="user_dob" class="mar-b15 fieldset__input">
+							<i class="fa fa-calendar fa-1 cal-pos"></i>
+                         </div>                  
+                        <div class="col-md-6">
+							<label class="lab-style">Gender</label>                           
+							<div class="drop-dwn-arr2">
+							<select class="mar-b15" name="user_gender" id="user_gender">
+								<option value="0">Select Gender</option>
+								<option value="1" <?php	if(isset($userSession->userSession['user_gender']) && $userSession->userSession['user_gender'] == '1') { echo "selected"; } ?>>Male</option>
+								<option value="2" <?php	if(isset($userSession->userSession['user_gender']) && $userSession->userSession['user_gender'] == '2') { echo "selected"; } ?>>Female</option>
+							</select>
+							</div>
+                        </div>
+                    </div>
+					<div class="row">                
+                         <div class="col-md-12">
+							<label class="lab-style">Email Address</label>
+                            <input type="text" value="<?php	if(isset($userSession->userSession['user_email']) && $userSession->userSession['user_email'] != '') { echo $userSession->userSession['user_email']; } ?>" placeholder="Email Address" id="user_email" name="user_email" class="mar-b15">
+                         </div>                 
+                  </div>
+                    <div class="row">                
+                        <div class="col-md-6">
+							<label class="lab-style">User Group</label>
+                            <input type="text" disabled value="<?php	if(isset($userSession->userSession['user_groupname']) && $userSession->userSession['user_groupname'] != '') { echo $userSession->userSession['user_groupname']; } ?>" class="mar-b15">
+                        </div>            
+                    </div>                   
+                </div>  
+                <div class="modal-footer">
+                    <div class="mar-b15"> 
+						<input type="Button" data-dismiss="modal" data-toggle="modal" data-target="#change_password" class="chan-pas" value="Change Password">
+                        <input type="Button" class="btn login-btn" value="Submit" onclick="validateEditProfile();">
+                        <input type="Button" data-dismiss="modal" class="btn cancel-btn " value="Cancel">
+                    </div>                   
+               </div>
+             </div>
+         </div>
+		 </form>
+       </div>
+		<script src="/Front/js/jquery-1.10.2.min.js"></script>
+		<script src="/Front/js/lib/picker.js"></script>
+		<script src="/Front/js/lib/picker.date.js"></script>
+		<script src="/Front/js/lib/picker.time.js"></script>
+		<script src="/Front/js/lib/legacy.js"></script>
+		<script src="/Front/js/lib/main.js"></script>
+		<p id="ses_firstname" style="display:none;"><?php	if(isset($userSession->userSession['user_firstname']) && $userSession->userSession['user_firstname'] != '') { echo $userSession->userSession['user_firstname']; } ?></p>
+		<p id="ses_lastname" style="display:none;"><?php	if(isset($userSession->userSession['user_lastname']) && $userSession->userSession['user_lastname'] != '') { echo $userSession->userSession['user_lastname']; } ?></p>
+		<p id="ses_email" style="display:none;"><?php	if(isset($userSession->userSession['user_email']) && $userSession->userSession['user_email'] != '') { echo $userSession->userSession['user_email']; } ?></p>
+		<p id="ses_dob" style="display:none;"><?php	if(isset($userSession->userSession['user_dob']) && $userSession->userSession['user_dob'] != '') { echo $userSession->userSession['user_dob']; } else { echo "Date of birth"; } ?></p>
+		<p id="ses_gender" style="display:none;"><?php	if(isset($userSession->userSession['user_gender']) && $userSession->userSession['user_gender'] != '') { echo $userSession->userSession['user_gender']; } else { echo '0'; } ?></p>
+		<p id="ses_photo" style="display:none;"><?php	echo $userPhoto; ?></p>
+		
+		<!-- Change Password -->
+		<div id="change_password" class="modal hide-in fade ind-pop-h2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="change_password_form" name="change_password_form" method="post" style="height:100%;">
+			<div class="modal-dialog">
+		    	<div class="modal-content">
+		        	<div class="modal-header">
+		            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetChangePasswordForm();">&#120;</button>
+		                <h3 id="myModalLabel">Change Password</h3>
+					</div>
+		            <div class="modal-body ind-pop  pop-pad-mob" id="change_password_modal">
+		                <div class="row">                
+		                	<div class="col-md-12">
+		                    	<input type="password" id="current_password" name="current_password" placeholder="Current Password" class="mar-b15" maxlength="50">
+							</div>
+						</div>
+		                <div class="row">
+		                	<div class="col-md-6">
+		                    	<input type="password" id="new_password" name="new_password" placeholder="New Password" class="mar-b15" maxlength="30">
+							</div>                  
+		                    <div class="col-md-6">
+		                    	<input type="password" id="new_confirm_password" name="new_confirm_password" placeholder="Confirm Password" maxlength="30">
+							</div>
+						</div>
+					</div>  
+		            <div class="modal-footer">
+		            	<div class="mar-b15"> 
+		                	<input type="Button" class="btn login-btn" onclick="validateChangePasswordForm();" value="Save">
+			        		<input type="Button" data-dismiss="modal" class="btn cancel-btn " onclick="resetChangePasswordForm();" value="Cancel">
+						</div>
+					</div>
+				</div>
+			</div>   
+			</form>  
+		</div>
+<?php		if(isset($userSession->userSession['user_group']) && $userSession->userSession['user_group'] == CONTRIBUTOR_GROUP_ID) { ?>
+		<!-- Contribution layer -->
+		<div id="cont-video" class="modal hide-in fade ind-pop-h4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="contribution-form" name="contribution-form" method="post">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-header">
+	                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#120;</button>
+	                        <h3 id="myModalLabel">Contribute Video</h3>
+	                    </div>
+	                    <div class="modal-body ind-pop  pop-pad-mob" id="contributed_video_modal">
+	                        <div class="row">                
+	                            <div class="col-md-12">
+	                                <input type="text" placeholder="Video URL" name="contribute_video_url" id="contribute_video_url" class="mar-b15">
+	                            </div>
+	                        </div>
+	                        <div class="row">                
+	                            <div class="col-md-12">
+	                                <input type="text" placeholder="Title" name="contribute_video_title" id="contribute_video_title" maxlength="300" class="mar-b15">
+	                            </div>
+	                        </div>
+	                        <div class="row">                
+	                            <div class="col-md-12">
+	                                <textarea class="mar-b15 wid-100"  placeholder="Description" name="contribute_video_desc" id="contribute_video_desc" maxlength="5000"></textarea>
+	                            </div>
+	                        </div>
+	                        <div class="row">                
+	                            <div class="col-md-12">                    
+	                                <label class="drop-dwn-arr wid-100">
+	                                    <select id="contribute_video_category" name="contribute_video_category">
+	                                        <option value="">Choose a Category</option>
+	                                        <?php	if(isset($tempSession->tempSession['categories']) && is_array($tempSession->tempSession['categories']) && count($tempSession->tempSession['categories']) > 0) {
+														foreach($tempSession->tempSession['categories'] as $key => $value) { ?>
+											<option <?php if(isset($listingSession->category) && $listingSession->category == $key) { ?>selected<?php } ?> value="<?php echo $key; ?>">&nbsp;&nbsp;<?php echo $value; ?></option>	
+											<?php		}
+													} ?>
+	                                    </select>
+	                                </label>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-md-12">
+	                               <select data-placeholder="Select Tags" id="contribute_video_tags" name="contribute_video_tags[]" style="width:30%;" multiple class="tags">
+						            <?php	if(isset($tempSession->tempSession['tags']) && is_array($tempSession->tempSession['tags']) && count($tempSession->tempSession['tags']) > 0) {
+												foreach($tempSession->tempSession['tags'] as $key => $value) { ?>
+									<option <?php if(isset($listingSession->tags) && $listingSession->tags == $key) { ?>selected<?php } ?> value="<?php echo (string)$value['_id']; ?>">&nbsp;&nbsp;<?php echo $value['tag_name']; ?></option>
+									<?php		}
+											} ?>
+						          </select>
+	                            </div>
+	                        </div>
+	                    </div>  
+	                    <div class="modal-footer">
+	                        <input type="button" class="btn login-btn" value="Submit" onclick="validateContributeForm(1);">
+	                        <button data-dismiss="modal" class="btn cancel-btn ">Cancel</button>              
+	                    </div>          
+	                </div>
+	             </div>
+			 </form> 
+       </div>
+		<!-- End -->
+<?php		} else if(isset($userSession->userSession['user_group']) && $userSession->userSession['user_group'] == USER_GROUP_ID) { ?>
+		<!-- Suggestion layer -->
+		<div id="cont-video" class="modal hide-in fade ind-pop-h4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="contribution-form" name="contribution-form" method="post">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-header">
+	                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#120;</button>
+	                        <h3 id="myModalLabel">Suggest Video</h3>
+	                    </div>
+	                    <div class="modal-body ind-pop  pop-pad-mob" id="contributed_video_modal">
+	                        <div class="row">                
+	                            <div class="col-md-12">
+	                                <input type="text" placeholder="Video URL" name="contribute_video_url" id="contribute_video_url" class="mar-b15">
+	                            </div>
+	                        </div>
+	                        <div class="row">                
+	                            <div class="col-md-12">
+	                                <input type="text" placeholder="Title" name="contribute_video_title" id="contribute_video_title" maxlength="300" class="mar-b15">
+	                            </div>
+	                        </div>
+	                        <div class="row">                
+	                            <div class="col-md-12">
+	                                <textarea class="mar-b15 wid-100"  placeholder="Description" name="contribute_video_desc" id="contribute_video_desc" maxlength="5000"></textarea>
+	                            </div>
+	                        </div>
+	                        <div class="row">                
+	                            <div class="col-md-12">                    
+	                                <label class="drop-dwn-arr wid-100">
+	                                    <select id="contribute_video_category" name="contribute_video_category">
+	                                        <option value="">Choose a Category</option>
+	                                        <?php	if(isset($tempSession->tempSession['categories']) && is_array($tempSession->tempSession['categories']) && count($tempSession->tempSession['categories']) > 0) {
+														foreach($tempSession->tempSession['categories'] as $key => $value) { ?>
+											<option <?php if(isset($listingSession->category) && $listingSession->category == $key) { ?>selected<?php } ?> value="<?php echo $key; ?>">&nbsp;&nbsp;<?php echo $value; ?></option>	
+											<?php		}
+													} ?>
+	                                    </select>
+	                                </label>
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <div class="col-md-12">
+	                               <select data-placeholder="Select Tags" id="contribute_video_tags" name="contribute_video_tags[]" style="width:30%;" multiple class="tags">
+						            <?php	if(isset($tempSession->tempSession['tags']) && is_array($tempSession->tempSession['tags']) && count($tempSession->tempSession['tags']) > 0) {
+												foreach($tempSession->tempSession['tags'] as $key => $value) { ?>
+									<option <?php if(isset($listingSession->tags) && $listingSession->tags == $key) { ?>selected<?php } ?> value="<?php echo (string)$value['_id']; ?>">&nbsp;&nbsp;<?php echo $value['tag_name']; ?></option>
+									<?php		}
+											} ?>
+						          </select>
+	                            </div>
+	                        </div>
+	                    </div>  
+	                    <div class="modal-footer">
+	                        <input type="button" class="btn login-btn" value="Submit" onclick="validateContributeForm(2);">
+	                        <button data-dismiss="modal" class="btn cancel-btn ">Cancel</button>              
+	                    </div>          
+	                </div>
+	             </div>
+			 </form> 
+       </div>
+		<!-- End -->
+<?php		} ?>
+<?php		if($this->controller == 'Front\Controller\Friends' && $this->action == 'friends') { ?>
+		<!-- Friends -->
+		<div id="invite" class="modal hide-in fade fri-pp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#120;</button>
+                    <h3 id="myModalLabel">Invite Friends</h3>
+                </div>
+                <div class="modal-body fri-cpart">
+                    <div class="row">
+                        <div class="col-md-5 clearfix">
+                            <button type="button" class="fac-bg" data-dismiss="modal" onclick='inviteViaFB("<?php echo FB_APPID; ?>", "<?php echo FB_INVITATION_MSG; ?>", "<?php echo REDIRECT_URL.'/fbreturn/'; ?>");' style="cursor:pointer;"><i class="fa fa-facebook fa-3"></i></button>
+                            <p data-dismiss="modal" onclick='inviteViaFB("<?php echo FB_APPID; ?>", "<?php echo FB_INVITATION_MSG; ?>", "<?php echo REDIRECT_URL.'/fbreturn/'; ?>");' style="cursor:pointer;">Invite Facebook Friends</p>
+                         </div>
+                        <div class="col-md-2 clearfix txt-ali"><span class="or-bg">Or</span></div>
+                        <div class="col-md-5 clearfix">
+                             <button type="button" class="mail-bg" data-dismiss="modal" data-toggle="modal" data-target="#email-inv" style="cursor:pointer;"><i class="fa fa-envelope fa-3"></i></button>
+                            <p data-dismiss="modal" data-toggle="modal" data-target="#email-inv" style="cursor:pointer;">Invite Friends Via email</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+       </div>
+		
+		<div id="email-inv" class="modal hide-in fade fri-pp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form name="email_form" id="email_form" method="post">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#120;</button>
+							<h3 id="myModalLabel">Invite Friends Via email</h3>
+						</div>
+						<div class="modal-body fri-cpart" id="new_email">
+							<div class="row mar-b10">
+								<div class="col-md-10 col-xs-10 clearfix">
+									<input type="text" placeholder="Enter Email Address" id="add_email" value="" class="wid100">
+								</div>
+								<div class="col-md-2 col-xs-2 clearfix">
+									<button class="plus-btn" onclick="addEmail();return false;">+</button>
+								</div>                        
+							</div>
+							
+						</div>
+						<div class="modal-footer">
+							<div class="mar-b15 tex-cen"> 
+								<button class="btn login-btn" onclick="sendInvitation();return false;">Submit</button>
+								<button class="btn cancel-btn " data-dismiss="modal" onclick="resetEmailInvitation();return false;">Cancel</button>              
+							</div>                    
+						</div>    
+					</div>
+				</div>
+			</form>
+		</div>
+<?php		} ?>
+<?php	} else { ?>
+       <div id="login" class="modal hide-in fade ind-pop-h" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form method="post" name="login_form" id="login_form" style="height:100%;">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetLoginForm();">&#120;</button>
+							<h3 id="myModalLabel">Login</h3>
+						</div>
+		
+						<div class="modal-body ind-pop  pop-pad-mob" id="login_modal">
+							<div class="row">
+								<div class="col-md-6">
+									<input type="text" placeholder="Email Address" class="mar-b15" id="login_email" name="login_email" maxlength="50">
+								</div>                  
+		
+								<div class="col-md-6">
+									<input type="password" placeholder="Password" id="login_password" name="login_password" maxlength="30">
+								</div>
+		
+							</div>
+						</div>  
+		
+						<div class="modal-footer">
+							<div class="mar-b15">
+							
+								<a href="#" class="forgot forgetalign" data-dismiss="modal" data-toggle="modal" data-target="#forget-password" title="Forget Password?" onclick="resetForgetPasswordForm();resetLoginForm();">Forget Password?</a>
+								<input type="Button" class="btn login-btn" id="login_button" value="Login" onclick="validateLoginForm();">
+								<input type="Button" data-dismiss="modal" class="btn cancel-btn " value="Cancel" onclick="resetLoginForm();">
+							</div>
+							<div class="fb-login">
+								<span class="or-bg">Or</span>                
+								<a href="#" class="fb-btn" data-dismiss="modal" onclick="javascript:facebookLogin();">Login with Facebook</a><!-- loginWithFB("<?php //echo FB_APPID; ?>", "<?php //echo FB_RETURN_URL; ?>", "<?php //echo PROTOCOL; ?>"); -->
+							</div>
+						</div>
+					</div>   
+				</div>    
+			</form>	
+		</div>
+      
+	   <div id="signup" class="modal hide-in fade ind-pop-h2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form id="registration_form" name="registration_form" method="post" style="height:100%;">
+			<div class="modal-dialog">
+		    	<div class="modal-content">
+		        	<div class="modal-header">
+		            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetRegistrationForm();">&#120;</button>
+		                <h3 id="myModalLabel">Non Facebook Registration</h3>
+					</div>
+		            <div class="modal-body ind-pop  pop-pad-mob" id="registration_modal">
+		            	<div class="row">
+		                	<div class="col-md-6">
+		                    	<input type="text" id="first_name" name="first_name" placeholder="First Name" class="mar-b15" maxlength="20">
+							</div>                  
+		                    <div class="col-md-6">
+		                    	<input type="text" id="last_name" name="last_name" placeholder="Last Name" class="mar-b15" maxlength="20">
+							</div>
+						</div>
+		                <div class="row">                
+		                	<div class="col-md-12">
+		                    	<input type="text" id="email_address" name="email_address" placeholder="Email Address" class="mar-b15" maxlength="50">
+							</div>
+						</div>
+		                <div class="row">
+		                	<div class="col-md-6">
+		                    	<input type="password" id="registration_password" name="registration_password" placeholder="Password" class="mar-b15" maxlength="30">
+							</div>                  
+		                    <div class="col-md-6">
+		                    	<input type="password" id="registration_confirm_password" name="registration_confirm_password" placeholder="Confirm Password" maxlength="30">
+							</div>
+						</div>
+					</div>  
+		            <div class="modal-footer">
+		            	<div class="mar-b15"> 
+		                	<input type="Button" class="btn login-btn" onclick="validateRegistrationForm();" value="Sign Up">
+			        		<input type="Button" data-dismiss="modal" class="btn cancel-btn " onclick="resetRegistrationForm();" value="Cancel">
+						</div>
+		                <div class="fb-login">
+		                	<span class="or-bg">Or</span>                
+							<a href="#" class="fb-btn" data-dismiss="modal" onclick="javascript:facebookLogin();">Login with Facebook</a><!-- loginWithFB("<?php //echo FB_APPID; ?>", "<?php //echo FB_RETURN_URL; ?>", "<?php //echo PROTOCOL; ?>"); -->
+						</div>
+					</div>
+				</div>
+			</div>   
+			</form>  
+		</div>
+	   
+	   <div id="forget-password" class="modal hide-in fade ind-pop-h4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<form method="post" name="forget_password_form" id="forget_password_form" style="height:100%;">
+			<div class="modal-dialog">
+		    	<div class="modal-content">
+		        	<div class="modal-header">
+		            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetForgetPasswordForm();">&#120;</button>
+		                <h3 id="myModalLabel">Forget Password</h3>
+					</div>
+		            <div class="modal-body ind-pop  pop-pad-mob" id="forget-password_modal">
+		            	<div class="row">
+		                	<div class="col-md-12">
+			                   <input type="text" placeholder="Email Address" class="mar-b15" id="forget_password_email" name="forget_password_email" maxlength="50">
+			                </div>
+						</div>
+					</div>  
+		            <div class="modal-footer">
+		            	<div class="mar-b15"> 
+		                	<a href="#" class="forgot forgetalign" title="Back to Login" data-dismiss="modal" data-toggle="modal" data-target="#login" onclick="resetLoginForm();resetForgetPasswordForm();">Back to Login</a>
+			                <input type="Button" class="btn login-btn" id="login_button" value="Reset" onclick="validateForgerPasswordForm();">
+			                <input type="Button" data-dismiss="modal" class="btn cancel-btn " value="Cancel" onclick="resetForgetPasswordForm();">
+						</div>
+					</div>
+				</div>
+			</div>   
+			</form>  
+		</div>
+<?php	}	?>
+	<!--Add To Playlist-->
+	<div id="add-playlist" class="modal hide-in fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    	<div class="modal-dialog">
+			<div class="modal-content">
+            	<div class="modal-header">
+                	<button type="button" class="close" data-dismiss="modal" onclick="resetPlaylistForm();" aria-hidden="true">&#120;</button>
+                    <h3 id="myModalLabel">Add To Playlist</h3>
+				</div>
+                <div class="modal-body" id="playlist_modal">
+                	<ul class="clearfix" id="playlist_listing">
+					<li class="page_noplaylists" id="page_noplaylists" <?php if(isset($userSession->mediaSession['playlist']) && is_array($userSession->mediaSession['playlist']) && count($userSession->mediaSession['playlist']) > 0) { ?>style="display:none;"<?php } ?>>
+						No Playlist
+					</li>
+<?php				if(isset($userSession->mediaSession['playlist']) && is_array($userSession->mediaSession['playlist']) && count($userSession->mediaSession['playlist']) > 0) {
+						foreach($userSession->mediaSession['playlist'] as $key => $value) {	?>
+						<li class="cc<?php echo $key; ?>">
+                        	<div class="radio">
+                            	<label>
+                                	<input type="radio" class="playlist_radio" name="optionsRadios" id="optionsRadios1" value="<?php echo $value; ?>" onchange='addToPlaylist(1, "<?php echo $key; ?>", "<?php echo $value; ?>");'>
+                                    <?php echo $value; ?>
+								</label>
+							</div>
+						</li>
+<?php					}
+					}	?>
+						<li><font style="font-size:12px;color:gray">Note: Video will be added to the newly created playlist.</font></li>          
+						<li>
+                        	<input type="text" placeholder="Create New Playlist" id="playlist_name" name="playlist_name" maxlength="100">
+							<input type="Button" value="Create" onclick="createPlaylist(2);" class="btn login-btn">
+							<input type="Button" value="Cancel" class="btn cancel-btn  mart10" data-dismiss="modal" onclick="resetPlaylistForm();" >
+						</li>
+					</ul>
+				</div>
+			</div>   
+		</div>        
+	</div>
+	<!--End: Add To Playlist-->
+	<!--Playlist-->
+	<div id="Playlist" class="modal hide-in fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+	        	<div class="modal-header">
+	            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetPlaylistForm();" >&#120;</button>
+	                <h3 id="myModalLabel">Playlist</h3>
+				</div>
+	            <div class="modal-body" id="create_playlist_modal">
+	            	<ul class="clearfix playlist-model" id="top-nav-playlist">
+						<li class="last noplaylists" id="noplaylists" <?php if(isset($userSession->mediaSession['playlist']) && is_array($userSession->mediaSession['playlist']) && count($userSession->mediaSession['playlist']) > 0) { ?>style="display:none;"<?php } ?>>
+							No Playlist
+						</li>
+<?php					if(isset($userSession->mediaSession['playlist']) && is_array($userSession->mediaSession['playlist']) && count($userSession->mediaSession['playlist']) > 0) {
+							foreach($userSession->mediaSession['playlist'] as $key => $value) {	?>
+							<li class="c<?php echo $key; ?> hasplaylists">
+		                    	<a href="<?php	echo $this->url('front', array('controller' => 'search', 'action' => 'playlist', 'id' => $key)); ?>"><?php echo $value; ?></a> <!-- <span>(4 Videos)</span>  -->
+								<a class="icon-delete" onclick='deletePlaylist("<?php echo $key; ?>", "<?php echo $value; ?>"); return false;' href="#"><img style="height:16px; width:16px;margin-left:10px;" src="/Front/img/btn-delete.png" title="Delete" alt="Delete"></a>
+							</li>
+<?php						}
+						} ?>
+		                <li class="last clearfix">
+						<input type="text" placeholder="Create New Playlist" name="new_playlist_name" id="new_playlist_name">
+		                <input type="Button" value="Create" onclick="createPlaylist(1);" class="btn login-btn">
+						<input type="Button" value="Cancel" class="btn cancel-btn  mart10" data-dismiss="modal" onclick="resetPlaylistForm();" >
+						</li>
+					</ul>
+				</div>
+			</div>   
+		</div>        
+	</div>
+	<!--End: Playlist-->
+
+
+		<a href="#" id="confirmation_modal" class="forgot" data-dismiss="modal" data-toggle="modal" data-target="#confirmation"></a>
+		
+		<div id="confirmation" class="modal hide-in fade ind-pop-h4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+		    	<div class="modal-content">
+		        	<div class="modal-header">
+		            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetRegistrationForm();">&#120;</button>
+		                <h3 id="myModalLabel2">Congratulations</h3>
+					</div>
+		            <div class="modal-body ind-pop  pop-pad-mob">
+		            	<div class="row">
+		                	<div class="col-md-12" id="message_content">
+			                   Thank you for registering!  A confirmation email has been sent to your email address. Please click on the link in that email in order to activate your account.
+			                </div>
+						</div>
+					</div>  
+		            <div class="modal-footer">
+		            	<div class="mar-b15"> 
+			                <input type="Button" class="btn login-btn" data-dismiss="modal" id="confirmation_button" value="OK">
+						</div>
+					</div>
+				</div>
+			</div>   
+		</div>
+		<!--Feedback-->
+        <div id="Feedback" class="modal hide-in fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+				<form class="form-horizontal" name="feedback_form" id="feedback_form" method="post">
+				<div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="myModalLabel">Feedback</h3>
+                    </div>
+                    <div class="modal-body ind-pop" id="feedback_modal">
+						<input type="hidden" id="hidden_feedback_email" <?php if(isset($userSession->userSession['user_email']) && $userSession->userSession['user_email'] != '') { ?>value="<?php echo $userSession->userSession['user_email']; ?>" <?php } ?>>
+						<div class="row">
+                          	<div class="col-sm-12">
+                           		<input type="email" placeholder="Email" name="feedback_email" id="feedback_email" style="width:100%" <?php if(isset($userSession->userSession['user_email']) && $userSession->userSession['user_email'] != '') { ?>value="<?php echo $userSession->userSession['user_email']; ?>" disabled<?php } ?>>
+                           	</div>
+						</div>
+						<div class="row">
+                           	<div class="col-sm-12">
+                           		<span class="fback-select">
+									<select style="width:100%" placeholder="Select Category" name="feedback_category" id="feedback_category">
+                                    	<option value="">Select Category</option>
+										<option value="1">Ask a "how to" question</option>
+                                        <option value="2">Report a technical issue</option>
+                                        <option value="3">Discuss and give feedback</option>
+									</select>
+								</span>
+							</div>
+						</div>
+						<div class="row">
+                            <div class="col-sm-12">
+                            	<textarea style="width:100%" placeholder="Comments" name="feedback_message" id="feedback_message"></textarea>
+							</div>
+						</div>
+                    </div>
+					<div class="modal-footer col-sm-12">
+						<input type="submit" class="btn login-btn" value="Send" title="Send" onclick="return validateFeedback();">
+						<button type="button" data-dismiss="modal" class="btn cancel-btn" onclick="resetFeedbackForm();" >Cancel</button>
+					</div>
+				</div>
+				</form>
+			</div>
+       </div>
+	   <a href="#" id="fri-pop-trigger" class="btn btn-primary invi-btn" data-toggle="modal" data-target="#fri-pop" style="display:none;"></a>
+	   <div id="fri-pop" class="modal hide-in fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+            	<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&#120;</button>
+						<h3 id="myModalLabel">Friends</h3>
+					</div>
+					<div class="modal-body pop-height" id="extended_friends_modal_list">
+ 
+
+					</div>
+				</div>
+            </div>
+       </div>
+	<noscript>
+		<div class="alert alert-block span10" style="margin-top:30px;">
+			<h4 class="alert-heading">Warning!</h4>
+			<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+		</div>
+	</noscript>
+	<div class="progress-indicator">
+	   <img src="/Front/img/loader.GIF" alt="" style="width:75px;height:75px;"/>
+	</div>
+	
+    </body>
+</html>
+        <!-- JS Core -->
+<?php	echo $this->headScript();	?>
+<!-- To hide the address bar in mobile device -->
+<script type="text/javascript">
+	window.addEventListener("load",function() {
+		setTimeout(function(){
+		// Hide the address bar!
+			window.scrollTo(0, 1);
+		}, 0);
+	});
+</script> 
+<!-- To trigger the events while loading a page -->
+<script type="text/javascript">
+	
+	$(window).load(function(){
+		$('#bodyDiv').css('display', 'block');
+		$('.picker__select--month').before("<div class='drop-dwn-arr3'>");
+		$('.picker__select--month').after("</div>");
+		$('.picker__select--year').before("<div class='drop-dwn-arr4'>");
+		$('.picker__select--year').after("</div>");
+	});
+	
+	$('.picker__select--month').change(function(){
+		$('.picker__select--month').before("<div class='drop-dwn-arr3'>");
+		$('.picker__select--month').after("</div>");
+		$('.picker__select--year').before("<div class='drop-dwn-arr4'>");
+		$('.picker__select--year').after("</div>");
+	});
+	$('.picker__select--year').change(function(){
+		$('.picker__select--month').before("<div class='drop-dwn-arr3'>");
+		$('.picker__select--month').after("</div>");
+		$('.picker__select--year').before("<div class='drop-dwn-arr4'>");
+		$('.picker__select--year').after("</div>");
+	});
+	
+	//	Start: Pre-loader
+	$(window).bind(function(){
+		$('.progress-indicator').css( 'display', 'block' );
+		setTimeout( function() {
+        	$('.progress-indicator > img').attr( 'src', 
+            $('.progress-indicator > img').attr('src')+'?reload' );
+		}, 50 );
+	});
+	//	End: Pre-loader
+	
+	//	Start: Login with Facebook 
+	
+	var APP_ID="<?php echo FB_APPID; ?>";
+	
+	window.fbAsyncInit = function() {
+		FB.init({
+			  appId  : APP_ID,
+			  status : true,
+			  cookie : false,
+			  xfbml  : true
+		});
+	};
+	
+	function initFacebook() {
+		FB.init({
+		  appId  : APP_ID,
+		  status : true,
+		  cookie : false,
+		  xfbml  : true
+		});
+		FB.getLoginStatus(onFacebookLoginStatus);
+	};
+
+	(function() {
+		var e = document.createElement('script');
+		e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		e.async = true;
+		document.getElementById('fb-root').appendChild(e);
+		}());
+
+	var facebookLoginWindow;
+	var loginWindowTimer;
+	
+	function facebookLogin() {
+		var popupWidth=500;
+		var popupHeight=300;
+		var xPosition=($(window).width()-popupWidth)/2;
+		var yPosition=($(window).height()-popupHeight)/2;
+		var loginUrl="http://www.facebook.com/dialog/oauth/?"+
+			"scope=email,user_activities,user_likes,publish_actions,read_stream,publish_stream&"+
+			"client_id="+APP_ID+"&"+
+			"redirect_uri=<?php echo REDIRECT_URL; ?>/fbreturn/&"+
+			"response_type=token&"+
+			"display=popup";
+		
+		facebookLoginWindow=window.open(loginUrl, "LoginWindow", 
+			"location=1,scrollbars=1,"+
+			"width="+popupWidth+",height="+popupHeight+","+
+			"left="+xPosition+",top="+yPosition);
+		
+		loginWindowTimer=setInterval(onTimerCallbackToCheckLoginWindowClosure, 1000);
+	}
+
+	function onTimerCallbackToCheckLoginWindowClosure() { 
+		if (facebookLoginWindow.closed) {
+			clearInterval(loginWindowTimer);
+			initFacebook();
+		}
+    }
+	
+	function onFacebookLoginStatus(response) {
+		showOverlay();
+		if (response.status=="connected" && response.authResponse)
+		{
+			FB.api("/me", onMyInfoLoaded);
+		} else {
+			hideOverlay();
+		}
+	}  
+	
+	function onMyInfoLoaded(response) {
+		if(response.id != undefined && response.email != undefined && response.first_name != undefined && response.last_name != undefined) {
+			var user_email		= response.email,
+				user_firstname	= response.first_name,
+				user_lastname	= response.last_name,
+				user_fbuid		= response.id;
+				
+				$.post('/front/index/validate-fblogin', {user_fbuid: user_fbuid, user_email: user_email, user_firstname: user_firstname, user_lastname: user_lastname}, function(data){
+					if($.trim(data) == 1) {
+						<?php	if((isset($_GET['request_ids']) && $_GET['request_ids'] != '') || (isset($tempfSession->tempSession['fbRequests']) && $tempfSession->tempSession['fbRequests'] != '')) { ?>
+							setTimeout('requestsFacebook();', 1000);
+						<?php	} else { ?>
+							window.location.reload();	
+						<?php	} ?>
+					} else {
+						hideOverlay();
+						alert('Authentication Failed. Please try again.');
+					}
+				});
+		} else {
+			console.log("Error!");
+		}
+	}
+
+	//	End: Login with Facebook 
+	
+	<?php	if(isset($_GET['activate']) && $_GET['activate'] == 1) { ?>
+		$('#myModalLabel2').html('Account Activation');
+		$('#message_content').html('Congratulations! Your account has been activated. Have Fun!<br><br>Please login with your email address and password.');
+		$('#confirmation_modal').click();
+		$('#confirmation').click(function(){
+			showOverlay();
+			location.href	= '/';
+		});
+	<?php	} else if(isset($_GET['activate']) && $_GET['activate'] == 0) { ?>
+		$('#myModalLabel2').html('Account Activation');
+		$('#message_content').html('Sorry! Your account has not been activated.<br><br>Please contact our support team.');
+		$('#confirmation_modal').click();
+		$('#confirmation').click(function(){
+			showOverlay();
+			location.href	= '/';
+		});
+	<?php	} else if((isset($_GET['request_ids']) && $_GET['request_ids'] != '') || (isset($tempfSession->tempSession['fbRequests']) && $tempfSession->tempSession['fbRequests'] != '')) {
+				if(isset($_GET['request_ids'])) {
+					$fbRequests		= array('fbRequests' => $_GET['request_ids']);
+					$tempfSession->tempSession	= $fbRequests;
+				}
+				//	Case: Logged in FB, not in Snapstate
+				if(!isset($userSession->userSession['_id']) || $userSession->userSession['_id'] == '') {	?>
+					$('#signup').modal('show');
+<?php			} else { ?>
+					setTimeout('requestsFacebook();', 1000);
+<?php			} ?>
+		function requestsFacebook() {
+			FB.init({
+			  appId  : APP_ID,
+			  status : true,
+			  cookie : false,
+			  xfbml  : true
+			});
+			var fbUserIds	= [];
+			FB.getLoginStatus(function(response){
+				if (response.status=="connected" && response.authResponse)
+				{
+					FB.api('me/apprequests/', function(response) {
+						console.log(response.data.length);
+						for(var i = 0; i<response.data.length; i++) {
+							console.log(response.data[i].from.id);
+							fbUserIds.push(response.data[i].from.id);
+							//console.log(response.data[i].application.id);	//	Should be equal to get param - request ids.
+						}
+						$.post('/front/friends/update-fbfriends', {fbusers: JSON.stringify(fbUserIds)}, function(data){
+							if(data == 1)
+								window.location.href	= '/';
+						});
+					});
+				} else {
+					facebookLogin();
+				}
+			});
+		};
+		
+		
+<?php		} else if(isset($_GET['referral']) && $_GET['referral'] != '') {
+				//$emailRequests				= array('referral' => base64_decode($_GET['referral']));
+				//$tempfSession->tempSession	= $emailRequests;
+				$email	= (isset($_GET['email']) && $_GET['email'] != '') ? $_GET['email'] : ''; ?>
+			$('#email_address').val('<?php echo $email; ?>');
+			$('#signup').modal('show');
+<?php		}
+		$controllerArray	= array('Front\Controller\Index-index', 'Front\Controller\Search-search', 'Front\Controller\Search-filter');
+		if(in_array($this->controller.'-'.$this->action, $controllerArray)) { ?>
+			loadVideos(0);
+<?php	} else if($this->controller == 'Front\Controller\Search' && $this->action == 'view-recommended') { ?>
+			loadRecommended(0);
+<?php	} else if($this->controller == 'Front\Controller\Search' && $this->action == 'view-watched') { ?>
+			loadWatched(0, 1);
+<?php	} else if($this->controller == 'Front\Controller\Friends' && $this->action == 'friends') { ?>
+			loadFriends(0);
+<?php	} else if($this->controller == 'Front\Controller\Search' && $this->action == 'top-videos') { ?>
+			loadTopVideos(0);
+<?php	} else if($this->controller == 'Front\Controller\Search' && $this->action == 'contributed-videos') { ?>
+			loadContributed(0, 1);
+<?php	} else if($this->controller == 'Front\Controller\Search' && $this->action == 'playlist') { ?>
+			loadPlaylistVideos(0);
+			$('#title_playlist_name').html($('#current_playlist_name').val());
+<?php	} ?>
+
+</script>
+
+<?php	if(!MAILER)	{
+			//echo ">>+++>>".$this->controller.'--'.$this->action;
+		}	?>
+<script type="text/javascript">
+    var config = {
+      '.tags': {no_results_text:'Oops, nothing found!'}
+    }
+    $(document).ready(function() {
+		for (var selector in config) {
+	      $(selector).chosen(config[selector]);
+		}
+	});
+</script>
+<script type="text/javascript">       
+	/*	$( document ).ready(function() {             
+		$('.container .dropdown').on('show.bs.dropdown', function(e){
+        	$(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+		});
+		$('.container .dropdown').on('hide.bs.dropdown', function(e){
+        	$(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+		});
+	});	*/            
+</script>

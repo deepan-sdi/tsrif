@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+	<title>permadi.com | Example Of Centering Facebook OAUTH Popup Window</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="fb-root"></div>
+<script>
+	var APP_ID="578844945519464";
+
+	window.fbAsyncInit = initFacebook;
+	
+	function initFacebook()
+	{
+		FB.init({
+		  appId  : APP_ID,
+		  status : true, // check login status
+		  cookie : false, // enable cookies to allow the server to access the session
+		  xfbml  : true  // parse XFBML
+		});
+
+		FB.getLoginStatus(onFacebookLoginStatus);
+	};
+
+	(function() {
+		var e = document.createElement('script');
+		e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+		e.async = true;
+		document.getElementById('fb-root').appendChild(e);
+		}());
+
+
+	
+	function facebookLogout()
+	{
+		FB.logout();
+		var loginButtonDiv=document.getElementById("fb-login-button-div");
+		loginButtonDiv.style.display="block";	
+		var logoutButtonDiv=document.getElementById("fb-logout-button-div");
+		logoutButtonDiv.style.display="none";	
+		var contentDiv=document.getElementById("user-is-authenticated-div");
+		contentDiv.style.display="none";			
+	}
+
+	var facebookLoginWindow;
+	var loginWindowTimer;
+	function facebookLogin()
+	{
+		var popupWidth=500;
+		var popupHeight=300;
+		var xPosition=($(window).width()-popupWidth)/2;
+		var yPosition=($(window).height()-popupHeight)/2;
+		var loginUrl="http://www.facebook.com/dialog/oauth/?"+
+			"scope=publish_stream&"+
+			"client_id="+APP_ID+"&"+
+			"redirect_uri=http://snapstate.sdiphp.com/&"+
+			"response_type=token&"+
+			"display=popup";
+		
+		facebookLoginWindow=window.open(loginUrl, "LoginWindow", 
+			"location=1,scrollbars=1,"+
+			"width="+popupWidth+",height="+popupHeight+","+
+			"left="+xPosition+",top="+yPosition);
+			
+		loginWindowTimer=setInterval(onTimerCallbackToCheckLoginWindowClosure, 1000);
+	}
+
+	function onTimerCallbackToCheckLoginWindowClosure() 
+	{ 
+		if (facebookLoginWindow.closed) 
+		{
+			clearInterval(loginWindowTimer);
+			initFacebook();
+		}
+    }
+
+
+	/*
+	* Callback function for FB.login
+	*/
+	function onFacebookLoginStatus(response)
+	{
+    alert("onFacebookLoginStatus response.status="+response.status+" response.session="+response.session);  
+		if (response.status=="connected" && response.authResponse)
+		{
+			var loginButtonDiv=document.getElementById("fb-login-button-div");
+			loginButtonDiv.style.display="none";
+			var logoutButtonDiv=document.getElementById("fb-logout-button-div");
+			logoutButtonDiv.style.display="block";
+			var contentDiv=document.getElementById("user-is-authenticated-div");
+			contentDiv.style.display="block";
+			FB.api("/me", onMyInfoLoaded);
+		}
+		else
+		{
+			var loginButtonDiv=document.getElementById("fb-login-button-div");
+			loginButtonDiv.style.display="block";	
+			var contentDiv=document.getElementById("user-is-authenticated-div");
+			contentDiv.style.display="none";			
+		}
+
+	}  
+	
+	function onMyInfoLoaded(response)
+	{
+		var contentDiv=document.getElementById("user-is-authenticated-div");
+		contentDiv.innerHTML="<h1>Welcome "+response.name+", you are logged in.</h1>";		
+	}
+	
+</script>
+<div id="fb-login-button-div" style="display:none;">
+	Please login to enjoy all the features of this application:
+	<input id="loginButton" type="button" value="Login To Facebook" onclick="javascript:facebookLogin();">
+</div>
+<div id="fb-logout-button-div" style="display:none;">
+	<input id="logoutButton" type="button" value="Logout From Facebook" onclick="javascript:facebookLogout();">
+</div>
+
+<div id="user-is-authenticated-div" style="display:none;">
+	<h1>You have been authenticated.  The application is ready to use.</h1>
+</div>
+<p>
+This is a bare-bone demonstration of how to do center an OAUTH Login window, using Facebook Graph API.
+<br>Click the Login button to open the pop-up.  (If you are already logged in, click the Logout button first.)
+<br><a target="_blank" href="http://www.permadi.com/blog/2011/04/centering-facebook-oath-login-popup-dialog">
+http://www.permadi.com/blog/2011/04/centering-facebook-oath-login-popup-dialog</a>
+</div>
+</html>

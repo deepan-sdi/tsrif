@@ -1,0 +1,72 @@
+<?php	$newResultArray	= array();
+		if(is_array($records) && count($records) > 0) {
+			foreach($records as $key => $value) {
+				$newResultArray[(string)$value['_id']]	= $value;
+			}
+		}
+		
+		if(is_array($mediaArray) && count($mediaArray) > 0) {
+			foreach($mediaArray as $key => $value) {
+				$videoUrl	= '/video/'.base64_encode((string)$value['id']);	?>
+	<dd class="col-md-4 col-xs-12 videoFrame">
+		<div class="row">
+        	<div class="col-md-12 col-xs-6">
+            	<div class="video">
+					<a href="<?php	echo $videoUrl; ?>" title="<?php echo $newResultArray[$value['id']]['media_title']; ?>">
+                     <img title="<?php echo $newResultArray[$value['id']]['media_title']; ?>" src="http://img.youtube.com/vi/<?php echo $this->customurl($newResultArray[$value['id']]['media_url'], 'fetchYoutubeID'); ?>/0.jpg" alt="<?php echo $newResultArray[$value['id']]['media_title']; ?>" >
+					 <span class="play-btn"><i class="fa fa-play fa-2"></i></span>
+					</a>
+				</div>
+			</div>
+            <div class="col-md-12 col-xs-6">
+				<h4><a title="<?php echo $newResultArray[$value['id']]['media_title']; ?>" href="<?php	echo $videoUrl; ?>"><?php	echo $this->text($newResultArray[$value['id']]['media_title'], 25, 'displayText'); ?></a></h4>
+				<div class="row">
+                	<div class="col-md-4 col-xs-12 pull-right">
+                    	<ul class="likes">
+                        	<li><a href="#" class="like" onclick='dovote(1, "<?php	echo base64_encode((string)$value['id']); ?>", "<?php echo $newResultArray[$value['id']]['media_title']; ?>");return false;'><i class="fa fa-2x fa-thumbs-up"></i></a></li>
+                            <li><a href="#" class="dislike" onclick='dovote(2, "<?php	echo base64_encode((string)$value['id']); ?>", "<?php echo $newResultArray[$value['id']]['media_title']; ?>");return false;'><i class="fa fa-2x fa-thumbs-down"></i></a></li>
+						</ul>
+					</div>
+                    <div class="col-md-8 col-xs-12 pull-left">
+                    	<ul class="users"> 
+<?php						if(isset($extended['media'][(string)$value['id']]) && is_array($extended['media'][(string)$value['id']]) && count($extended['media'][(string)$value['id']]) > 0) {
+								$inc 	= 0;
+								$userCount	= count($extended['media'][(string)$value['id']]);
+								$iuserCount	= ($userCount > 4) ? 3 : 4;
+								foreach($extended['media'][(string)$value['id']] as $ikey => $ivalue) {
+									if($inc < $iuserCount) {
+										
+										$userPhoto	= (isset($extended['friends'][$ivalue]['user_photo']) && trim($extended['friends'][$ivalue]['user_photo']) != '') ? '/Front/users/photo/thumb/'.$extended['friends'][$ivalue]['user_photo'] : '/Front/users/photo/thumb/no_photo.png';
+										$userPhoto	= (file_exists(getcwd().'/public/'.$userPhoto)) ? $userPhoto : '/Front/users/photo/thumb/no_photo.png'; ?>
+                        	<li><a href="#"><img src="<?php echo $userPhoto; ?>" width="30" height="30" alt="<?php echo ucwords($extended['friends'][$ivalue]['user_firstname'].' '.$extended['friends'][$ivalue]['user_lastname']); ?>" title="<?php echo ucwords($extended['friends'][$ivalue]['user_firstname'].' '.$extended['friends'][$ivalue]['user_lastname']); ?>"></a></li>
+<?php								}
+									$inc++;
+								}
+								if(count($extended['media'][(string)$value['id']]) > 4) {	?>
+							<li class="more"><a href="#" onclick="showExtendedFriends('<?php echo (string)$value['_id']; ?>');return false;">4+</a></li>
+<?php							}
+							} else { ?>
+							<li><a href="#" style="opacity:0;"></a></li>
+<?php						} ?>
+						</ul>                                                
+					</div>
+				</div>
+			</div>
+		</div>
+	</dd>
+<?php		}
+			if(($totalRecords - ($page * PERPAGE)) > 0) {	?>
+				<dd class="clearfix videoMore" id="more_videos">
+                    <p class="btn btn-default" onclick="loadTopVideos(1);">show 18 more</p>
+                </dd>
+<?php		} else { ?>
+				<dd class="clearfix videoMore" id="no_more_videos">
+                    <p class="btn nomore-btn">No more videos</p>
+                </dd>
+<?php		}
+		}	?>
+<script type="text/javascript">
+	if($('#video_count').length > 0) {
+		$('#video_count').html('<?php echo $totalRecords; ?> videos found');
+	}
+</script>

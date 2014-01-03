@@ -1,0 +1,149 @@
+<?php	echo $this->render('leftnav.phtml'); ?>
+<?php	if(isset($this->message) && trim($this->message) != '') {
+			$display	= 'display:block;';
+		} else {
+			$display	= 'display:none;';
+		}
+		$messageClass	= 'alert-success';
+		if(isset($this->errorMessage) && trim($this->errorMessage) == '1') {
+			$messageClass	= 'alert-error';
+		}	
+		?>
+			<div>
+				<ul class="breadcrumb">
+					<li>
+						<a href="<?php	echo $this->url('cms', array('controller' => 'index', 'action' => 'dashboard')); ?>">Home</a> <span class="divider">/</span>
+					</li>
+					<li>
+						<a href="<?php	echo $this->url('cms', array('controller' => 'user', 'action' => 'list-group')); ?>">Manage User Group</a> <span class="divider">/</span>
+					</li>
+					<li>
+						<a href="#">List User Groups</a>
+					</li>
+				</ul>
+			</div>
+			<div style="float:left; width: 100%;">
+			
+			<div class="alert <?php	echo $messageClass; ?>" id="userSuccessmsg" style="<?php	echo $display; ?>"> <?php	echo $this->message; ?></div>
+			
+			<div style="float:right;">
+				<a class="btn btn-primary" href="<?php	echo $this->url('cms', array('controller' => 'user', 'action' => 'create-group')); ?>">
+				<i class="icon-plus icon-white"></i>
+				Create User Group
+				</a>
+			</div>
+			</div>
+			
+			<!-- Search Section Start-->
+			<div class="alert alert-block span14" style="float:left; margin-left:0px; margin-top: 6px;">
+				<h4 class="alert-heading" style="margin-bottom: 10px;">Filter</h4>
+<?php	$form = $this->filterForm;
+		$form->setAttribute('action', $this->url('cms', array('controller' => 'user', 'action' => 'list-group')));
+		$form->prepare();
+		echo $this->form()->openTag($form);	?>
+					<div class="control-group span3">
+						<div class="controls">
+						  <?php	echo $this->formRow($form->get('keyword')); ?>
+						</div>
+					</div>
+					<?php	$tempArray		= array();
+							$tempArray['']	= 'Select Role';
+							foreach($this->rolesArray as $key => $value) {
+								$id				= (string)$value['_id'];
+								$tempArray[$id]	= $value['role_name'];
+							}	?>
+					<div class="control-group span3">
+						<div class="controls">
+						  <?php	echo $this->formRow($form->get('selectUserOption')->setValueOptions($tempArray)); ?>
+						</div>
+					</div>
+					<div class="control-group span3">
+						<div class="controls">
+						<?php	echo $this->formRow($form->get('selectStatus')); ?>
+						</div>
+					</div>
+					<div class="control-group span3">
+						<div class="controls">
+							<?php	echo $this->formRow($form->get('submit')); ?>
+							<?php	echo $this->formRow($form->get('reset')); ?>
+						</div>
+					</div>
+					<div class="control-group span3" style="width: 190px;float:right;">
+						<div class="controls">
+						</div>
+					</div>
+<?php	echo $this->form()->closeTag();	?>
+			</div>
+			<!-- Search Section Ends-->
+			<div class="row-fluid" id="listingDiv">		
+			
+			</div>
+			
+			
+			<table class="table table-striped table-bordered bootstrap-datatable datatable" style="display:none;">
+			  <thead>
+				  <tr>
+					  <th style="width:<?php	echo $userwidth; ?>">First Name</th>
+					  <th style="width:<?php	echo $userwidth; ?>">Last Name</th>
+					  <th>Email</th>
+					  <th>Status</th>
+					  <th style="width:<?php echo $width; ?>">Actions</th>
+				  </tr>
+			  </thead>   
+			  <tbody>
+				<tr>
+					<td>FirstName</td>
+					<td>LastName</td>
+					<td>Email</td>
+					<td class="center">
+						<span>Status</span>
+					</td>
+					<td class="center">
+						<a class="btn btn-success view-user" href="#" id="innerViewButton">
+							<i class="icon-zoom-in icon-white"></i>  
+							View                                            
+						</a>
+						<a class="btn btn-info" href="edit_user.php">
+							<i class="icon-edit icon-white"></i>  
+							Edit                                            
+						</a>
+						<a class="btn btn-danger" href="#">
+							<i class="icon-trash icon-white"></i> 
+							Delete
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>            
+		<div class="modal  fade" id="viewUser" style="display:block;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h2>View Group</h2>
+			</div>
+			<div class="modal-body">
+				<div class="box">
+					<div class="box-content">
+						<table class="table table-bordered table-striped">
+							<tbody>
+							  <tr>
+								<td width="30%"><strong>Group Name</strong></td>
+								<td id="view_name">Admin</td>
+							  </tr>
+							  <tr>
+								<td width="30%"><strong>Role</strong></td>
+								<td id="view_role">Admin</td>
+							  </tr>
+							   <tr>
+								<td><strong>Status</strong></td>
+								<td id="view_status">Active</td>
+							  </tr>
+							</tbody>
+						  </table>
+					</div>
+				</div>
+			</div>
+		</div>      
+<script type="text/javascript">
+	loadDiv('listingDiv', '/cms/user/view-group', '', '');
+	setTimeout("$('#userSuccessmsg').hide('slow')", 3000);
+</script>

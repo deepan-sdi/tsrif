@@ -1,0 +1,281 @@
+<?php	echo $this->render('fo-header.phtml');
+		//	Session
+		use Zend\Session\Container;
+		$userSession	= new Container('fo_user');
+		$listingSession	= new Container('fo_listing');
+		$tempSession	= new Container('fo_temp_session');
+		$tempfSession	= new Container('fo_ftemp_session');	?>
+    <body class="home-page">
+		<div id="fb-root"></div>
+		<!-- <div id="bodydiv"> -->
+    	<!--View in Desktop--->
+        <div class="visible-lg">
+        	<div class="navbar navbar-fixed-top">
+            	<div class="container">
+                	<div class="navbar-header">
+                    	<a class="navbar-brand" href="/"><img src="<?php	echo SITE_IMAGE_PATH; ?>snapstate-logo.png" alt="SnapState Logo"></a> 
+                        
+<?php	if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') {	?>
+						<div class="navbar-login navbar-right dropdown">
+                            <a class="btn btn-primary dropdown-toggle" href="#" data-toggle="dropdown" version="3">My Account<b class="caret"></b></a>                
+                            <ul aria-labelledby="drop3" role="menu" class="dropdown-menu">
+                                <li role="presentation"><a href="#" tabindex="-1" role="menuitem" data-toggle="modal" data-target="#edit_profile_popup" onclick="resetProfileForm();"><i class="fa fa-edit"></i>Edit Profile</a></li>
+                                <li class="divider" role="presentation"></li>
+                                <li role="presentation"><a href="#" tabindex="-1" role="menuitem" data-toggle="modal" data-target="#Playlist" onclick="resetPlaylistForm();" ><i class="fa fa-list-alt"></i>Playlist</a></li>
+                                <li class="divider" role="presentation"></li>
+                                <li role="presentation"><a href="<?php	echo $this->url('videos-watched'); ?>" tabindex="-1" role="menuitem"><i class="fa fa-video-camera"></i>Videos Watched</a></li>
+                                <?php	if(isset($userSession->userSession['user_group']) && $userSession->userSession['user_group'] == CONTRIBUTOR_GROUP_ID) { ?>
+								<li class="divider" role="presentation"></li>
+								<li role="presentation"><a href="<?php	echo $this->url('suggested-videos'); ?>" tabindex="-1" role="menuitem" ><i class="fa fa-check-square-o"></i>Suggested Videos</a></li>
+								<?php	} ?>
+								<li class="divider" role="presentation"></li>
+                                <li role="presentation"><a href="<?php	echo $this->url('front', array('controller' => 'index', 'action' => 'logout')); ?>" onclick="showOverlay();" tabindex="-1" role="menuitem"><i class="fa fa-power-off"></i>Logout</a></li>
+                          </ul>
+                        </div>
+						
+<?php	} else {	?>
+						<div class="navbar-login navbar-right"><a class="btn btn-primary visible-lg" data-toggle="modal" data-target="#login">Login</a></div>
+<?php	}	?>
+						<form class="navbar-form navbar-left visible-lg" method="post" id="search_form" name="search_form" action="<?php	echo $this->url('search'); ?>">
+                            <div class="form-group">
+                                <input type="text" id="navsearch" placeholder="search" class="form-control" name="search" value="<?php	if(isset($listingSession->keyword) && trim($listingSession->keyword) != '') { echo $listingSession->keyword; } ?>">
+								<button type="submit" class="btn btn-success searchSubmit"></button>
+                            </div>        
+                        </form>
+                	</div>
+                </div>
+            </div>
+         </div>
+         
+         <div class="jumbotron visible-lg">
+            <div class="container">
+                <h1><span class="size100 bold">Snap</span> Yourself into State</h1>
+<?php	if(!isset($userSession->userSession['_id']) || $userSession->userSession['_id'] == '') {	?>
+                <p class="normal margintop30">We put your videos first. That means we don&rsquo;t put ads before, after,<br>or over your videos.</p>
+                <p><a class="btn btn-primary btn-lg" data-toggle="modal" data-target="#signup" >FREE Signup!</a></p>
+<?php	} ?>
+            </div>
+        </div>
+        
+        <div class="flexCont">
+        
+        <aside class="asideNav hidden-lg">
+            <div class="sideBanner">
+                <div class="bannerIn">
+                    <h3><strong>snap</strong> yourself into state</h3>
+                    <p>We put your videos first. That<br> means we don’t put ads before,<br> after, or over your videos.</p>
+<?php	if(!isset($userSession->userSession['_id']) || $userSession->userSession['_id'] == '') {	?>
+                    <a href="#" class="btn btn-default" data-toggle="modal" data-target="#signup">FREE Sign up!</a>
+<?php	} ?>
+                </div>
+            </div>
+            <ul>
+                        <li>
+                            <h1 <?php if(isset($this->controller) && $this->controller == 'Front\Controller\Friends' && isset($this->action) && $this->action == 'friends') { ?>class="active"<?php } ?>><a href="<?php if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') { echo $this->url('friends'); } else { echo '#'; } ?>" <?php if(!isset($userSession->userSession['_id']) || $userSession->userSession['_id'] == '') { ?>onclick='doNotify();'<?php } ?> ><i class="fa fa-2x icon-friends"></i> Friends</a></h1>
+                        </li>                
+                        <li>
+                            <h1 <?php if(isset($this->controller) && $this->controller == 'Front\Controller\Search' && isset($this->action) && $this->action == 'filter') { ?>class="active arrow-drop"<?php } else { ?> class="arrow-drop" <?php } ?>><a href="javascript:void(0)"><i class="fa fa-2x icon-filter"></i> Filter</a></h1>
+							<!-- <form id="small_filter_form" name="small_filter_form" method="post" action="<?php //echo $this->url('search'); ?>"> -->
+								<ul class="dd-sel">
+	<?php	if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') {	?>
+									<li>Seen:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="small_filter_seen" name="small_filter_seen" onchange="filterSearch(2);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;Never</option>	
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;&lt; week</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '3') { ?>selected<?php } ?> value="3">&nbsp;&nbsp;&lt; month</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '4') { ?>selected<?php } ?> value="4">&nbsp;&nbsp;&lt;3 months</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '5') { ?>selected<?php } ?> value="5">&nbsp;&nbsp;&gt;3 months</option>
+										</select>
+									</span>
+									</li>
+									
+	                                <li>Friend:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="small_filter_friend" name="small_filter_friend" onchange="filterSearch(2);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->friend) && $listingSession->friend == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;Yes</option>	
+											<option <?php if(isset($listingSession->friend) && $listingSession->friend == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;No</option>
+										</select>
+									</span>
+									</li>
+	<?php	} ?>	
+									<li>Length:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="small_filter_length" name="small_filter_length" onchange="filterSearch(2);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;< 1 minutes</option>	
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;< 2 minutes</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '3') { ?>selected<?php } ?> value="3">&nbsp;&nbsp;< 3 minutes</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '4') { ?>selected<?php } ?> value="4">&nbsp;&nbsp;< 5 minutes</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '5') { ?>selected<?php } ?> value="5">&nbsp;&nbsp;> 5 minutes</option>
+										</select>
+									</span>
+									</li>
+									
+									<li>Category:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="small_filter_category" name="small_filter_category" onchange="filterSearch(2);">
+											<option value="">&nbsp;&nbsp;Select</option>
+											<?php	if(isset($tempSession->tempSession['categories']) && is_array($tempSession->tempSession['categories']) && count($tempSession->tempSession['categories']) > 0) {
+														foreach($tempSession->tempSession['categories'] as $key => $value) { ?>
+															<option <?php if(isset($listingSession->category) && $listingSession->category == $key) { ?>selected<?php } ?> value="<?php echo $key; ?>">&nbsp;&nbsp;<?php echo $value; ?></option>	
+											<?php		}
+													} ?>
+										</select>
+									</span>
+									</li>
+									
+									<li>Ranking:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="small_filter_ranking" name="small_filter_ranking" onchange="filterSearch(2);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->ranking) && $listingSession->ranking == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;Like</option>	
+											<option <?php if(isset($listingSession->ranking) && $listingSession->ranking == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;Dislike</option>
+										</select>
+									</span>
+									</li>
+	                            </ul>
+							<!-- </form> -->
+                        </li>
+                        <li> 
+                            <h1><a href="#" <?php if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') { ?>data-toggle="modal" data-target="#cont-video" onclick='resetContributeForm();'<?php } else { ?>onclick='doNotify();'<?php } ?> ><i class="fa fa-2x icon-upload"></i> <?php if(isset($userSession->userSession['user_group']) && $userSession->userSession['user_group'] == CONTRIBUTOR_GROUP_ID) { ?>Contribute<?php } else { ?>Suggest<?php } ?></a></h1>
+                        </li>
+                        <li> 
+                            <h1><a href="#" data-toggle="modal" onclick="resetFeedbackForm();" data-target="#Feedback"><i class="fa fa-2x icon-feedback"></i> Feedback</a></h1>
+                        </li>
+                        <li> 
+                            <h1 <?php if(isset($this->controller) && $this->controller == 'Front\Controller\Search' && isset($this->action) && $this->action == 'top-videos') { ?>class="active"<?php } ?>><a href="<?php echo $this->url('top-videos'); ?>" title="Top Videos"><i class="fa fa-2x icon-like"></i> Top Videos</a></h1>
+                        </li>
+                    </ul>
+        </aside>
+        
+        <div class="flexDiv">
+            <div class="navbar navbar-fixed-top hidden-lg">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+
+                        <a class="navbar-brand" href="/"><img src="<?php	echo SITE_IMAGE_PATH; ?>snapstate-logo@2x.png" alt="SnapState Logo"></a> 
+
+                        <a class="navbar-search" href="#"><span class="fa fa-2x fa-search"></span> <span class="fa fa-2x fa-times"></span></a> 
+                    </div>
+                    <form class="navbar-form" method="post" id="search_form_mini" name="search_form_mini" action="<?php	echo $this->url('search'); ?>">
+                        <div class="form-group">
+                            <div class="searchSm">
+                                <input type="text" id="navsearch2" placeholder="search" class="form-control" name="search" value="<?php	if(isset($listingSession->keyword) && trim($listingSession->keyword) != '') { echo $listingSession->keyword; } ?>">
+								<button type="submit" class="btn btn-success searchSubmit"></button>
+                            </div>
+
+                        </div>        
+                    </form>
+                </div>
+            </div>
+
+            <main class='SCROLLER_FRAME'>
+				<form id="filter_form" name="filter_form" method="post" style="display:none" action="<?php echo $this->url('search'); ?>">
+					<input type="Hidden" name="category" id="category">
+					<input type="Hidden" name="ranking" id="ranking">
+					<input type="Hidden" name="length" id="length">
+					<input type="Hidden" name="friend" id="friend">
+					<input type="Hidden" name="seen" id="seen">
+				</form>
+                <div class='SCROLLER'>
+                    <div class="container">
+                        <div class="row">
+                        	<aside class="col-lg-3 asideNav visible-lg">
+                    <ul>
+                        <li>
+                            <h1 <?php if(isset($this->controller) && $this->controller == 'Front\Controller\Friends' && isset($this->action) && $this->action == 'friends') { ?>class="active"<?php } ?>><a href="<?php if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') { echo $this->url('friends'); } else { echo '#'; } ?>" <?php if(!isset($userSession->userSession['_id']) || $userSession->userSession['_id'] == '') { ?>onclick='doNotify();'<?php } ?> ><i class="fa fa-2x icon-friends"></i> Friends</a></h1>
+                        </li>                
+                        <li>
+                            <h1  <?php if(isset($this->controller) && $this->controller == 'Front\Controller\Search' && isset($this->action) && $this->action == 'filter') { ?>class="active arrow-drop"<?php } else { ?> class="arrow-drop" <?php } ?>><a href="javascript:void(0)"><i class="fa fa-2x icon-filter"></i> Filter</a></h1>
+							<!-- <form id="filter_form" name="filter_form" method="post"> -->
+								<ul class="dd-sel">
+<?php	if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') {	?>
+	                                <li>Seen:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="filter_seen" name="filter_seen" onchange="filterSearch(1);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;Never</option>	
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;&lt; week</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '3') { ?>selected<?php } ?> value="3">&nbsp;&nbsp;&lt; month</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '4') { ?>selected<?php } ?> value="4">&nbsp;&nbsp;&lt;3 months</option>
+											<option <?php if(isset($listingSession->seen) && $listingSession->seen == '5') { ?>selected<?php } ?> value="5">&nbsp;&nbsp;&gt;3 months</option>
+										</select>
+									</span>
+									</li>
+									
+	                                <li>Friend:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="filter_friend" name="filter_friend" onchange="filterSearch(1);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->friend) && $listingSession->friend == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;Yes</option>	
+											<option <?php if(isset($listingSession->friend) && $listingSession->friend == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;No</option>
+										</select>
+									</span>
+									</li>
+<?php	} ?>
+									<li>Length:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="filter_length" name="filter_length" onchange="filterSearch(1);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;< 1 minutes</option>	
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;< 2 minutes</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '3') { ?>selected<?php } ?> value="3">&nbsp;&nbsp;< 3 minutes</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '4') { ?>selected<?php } ?> value="4">&nbsp;&nbsp;< 5 minutes</option>
+											<option <?php if(isset($listingSession->length) && $listingSession->length == '5') { ?>selected<?php } ?> value="5">&nbsp;&nbsp;> 5 minutes</option>
+										</select>
+									</span>
+									</li>
+									
+									<li>Category:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="filter_category" name="filter_category" onchange="filterSearch(1);">
+											<option value="">&nbsp;&nbsp;Select</option>
+											<?php	if(isset($tempSession->tempSession['categories']) && is_array($tempSession->tempSession['categories']) && count($tempSession->tempSession['categories']) > 0) {
+														foreach($tempSession->tempSession['categories'] as $key => $value) { ?>
+															<option <?php if(isset($listingSession->category) && $listingSession->category == $key) { ?>selected<?php } ?> value="<?php echo $key; ?>">&nbsp;&nbsp;<?php echo $value; ?></option>	
+											<?php		}
+													} ?>
+										</select>
+									</span>
+									</li>
+									
+									<li>Ranking:
+									<span class="drop-dwn-arr8 wid-100"> 
+										<select class="sel-box" id="filter_ranking" name="filter_ranking" onchange="filterSearch(1);">
+											<option value="0">&nbsp;&nbsp;Select</option>
+											<option <?php if(isset($listingSession->ranking) && $listingSession->ranking == '1') { ?>selected<?php } ?> value="1">&nbsp;&nbsp;Like</option>	
+											<option <?php if(isset($listingSession->ranking) && $listingSession->ranking == '2') { ?>selected<?php } ?> value="2">&nbsp;&nbsp;Dislike</option>
+										</select>
+									</span>
+									</li>
+	                            </ul>
+							<!-- </form> -->
+                        </li>
+                        <li> 
+                            <h1><a href="#"  <?php if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') { ?>data-toggle="modal" data-target="#cont-video" onclick='resetContributeForm();'<?php } else { ?>onclick='doNotify();'<?php } ?> ><i class="fa fa-2x icon-upload"></i> <?php if(isset($userSession->userSession['user_group']) && $userSession->userSession['user_group'] == CONTRIBUTOR_GROUP_ID) { ?>Contribute<?php } else { ?>Suggest<?php } ?></a></h1>
+                        </li>
+                        <li> 
+                            <h1><a href="#" data-toggle="modal" onclick="resetFeedbackForm();" data-target="#Feedback"><i class="fa fa-2x icon-feedback"></i> Feedback</a></h1>
+                        </li>
+                        <li> 
+                            <h1 <?php if(isset($this->controller) && $this->controller == 'Front\Controller\Search' && isset($this->action) && $this->action == 'top-videos') { ?>class="active"<?php } ?>><a href="<?php echo $this->url('top-videos'); ?>" title="Top Videos"><i class="fa fa-2x icon-like"></i> Top Videos</a></h1>
+                        </li>
+                    </ul>
+                </aside><!-- /Sidebar -->
+                            
+				<!-- Elements are loaded from sub-herder.phtml in views -->
+				
+<?php	echo $this->content; ?>
+                </div>
+                        </div>
+                    </div>
+                    <!-- /container -->
+<?php	echo $this->render('fo-footer.phtml'); ?>

@@ -1,0 +1,87 @@
+<?php	echo $this->render('leftnav.phtml'); ?>
+<?php	if(isset($this->message) && trim($this->message) != '') {
+			$display	= 'display:block;';
+		} else {
+			$display	= 'display:none;';
+		}
+		$messageClass	= 'alert-success';
+		if(isset($this->errorMessage) && trim($this->errorMessage) == '1') {
+			$messageClass	= 'alert-error';
+		}	?>
+			<div>
+				<ul class="breadcrumb">
+					<li>
+						<a href="<?php	echo $this->url('cms', array('controller' => 'index', 'action' => 'index')); ?>">Home</a> <span class="divider">/</span>
+					</li>
+					<li>
+						<a href="<?php	echo $this->url('cms', array('controller' => 'user', 'action' => 'list-roles')); ?>">Manage Roles</a> <span class="divider">/</span>
+					</li>
+					<li>
+						<a href="#">Create Role</a>
+					</li>
+				</ul>
+			</div>
+			
+			<div class="row-fluid">
+				<div class="box span12">
+					<div class="box-header well" data-original-title style="cursor:pointer;">
+						<h2><i class="icon-lock"></i> Create Role</h2>
+						<div class="box-icon">
+						</div>
+					</div>
+					<div class="box-content">
+<!-- Start: Create User Form -->
+<?php	$form = $this->createRoleForm;
+		$form->setAttribute('action', $this->url('cms', array('controller' => 'user', 'action' => 'create-role')));
+		$form->prepare();
+		echo $this->form()->openTag($form);	?>
+						  <fieldset>
+						  <div class="alert <?php	echo $messageClass; ?>" id="userSuccessmsg" style="<?php	echo $display; ?>"> <?php	echo $this->message; ?></div>
+						  	<?php	echo $this->formHidden($form->get('_id')); ?>
+							
+							<div class="control-group">
+								<label class="control-label" for="rolename">Role Name</label>
+								<div class="controls">
+									<?php	echo $this->formRow($form->get('role_name')); ?>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="rolestatus">Privilege</label>
+<?php						foreach($activityArray as $key => $value) {	?>
+								<div class="controls">
+								  <?php	echo $this->formRow($form->get('role_activity_'.$key)); ?>
+								  <span onclick="selectCheckbox('<?php echo $key; ?>')" style="font-size:14px;cursor:pointer;"><?php	echo $value; ?></span>
+								   <span id="radioError"></span>
+								</div>
+<?php						} ?>
+							 </div>
+							<div class="control-group">
+								<label class="control-label" for="rolestatus">Status</label>
+								<div class="controls">
+								  <?php	echo $this->formRow($form->get('role_status')); ?>
+								   <span id="radioError"></span>
+								</div>
+							 </div>
+							<div class="form-actions">
+							  <?php	echo $this->formSubmit($form->get('submit')); ?>
+							  <?php	echo $this->formReset($form->get('reset')); ?>
+							</div>
+						  </fieldset>
+<?php	echo $this->form()->closeTag();	?>
+<!-- End: Login Form --> 
+					</div>
+				</div>
+			</div>
+<script type="text/javascript">
+	function selectCheckbox(element) {
+		if($('#uniform-role_activity_'+element).children().hasClass('checked')) {
+			$('#uniform-role_activity_'+element).children().removeClass('checked');
+			$('#role_activity_'+element).val(0);
+			$('#role_activity_'+element).removeAttr('checked');
+		} else {
+			$('#uniform-role_activity_'+element).children().addClass('checked');
+			$('#role_activity_'+element).val(1);
+			$('#role_activity_'+element).attr('checked', 'checked');
+		}
+	}
+</script>

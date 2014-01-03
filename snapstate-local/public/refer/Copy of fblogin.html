@@ -1,0 +1,70 @@
+<html>
+<head></head>
+<body>
+<div id="fb-root"></div>
+<script>
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId      : '353997868079462',
+			channelUrl : "http://snapstatelocal.com/channel.html",
+		    status     : true,
+			cookie     : true,
+			xfbml      : true
+		});
+		
+		/*	FB.Event.subscribe('auth.authResponseChange', function(response) {
+		    if (response.status === 'connected') {
+				testAPI();
+			} else if (response.status === 'not_authorized') {
+				FB.login();
+			} else {
+				FB.login();
+			}
+		});	*/
+	};
+	
+	(function(d){
+		var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement('script'); js.id = id; js.async = true;
+		js.src = "//connect.facebook.net/en_US/all.js";
+		ref.parentNode.insertBefore(js, ref);
+	}(document));
+	
+	function testAPI() {
+		console.log('Welcome!  Fetching your information.... ');
+		FB.api('/me', function(response) {
+			console.log('Good to see you, ' + response.name + '.');
+			console.log('Good to see you, ' + response.email + '.');
+			console.log('Good to see you, ' + response.first_name + '.');
+			console.log('Good to see you, ' + response.last_name + '.');
+			//window.location.href = "moadmin.php";
+			FB.api('/me/friends', function(response) {
+				if(response.data) {
+					var friends	= response.data;
+					for(x in friends) {
+						console.log(friends[x].name+'-'+friends[x].id);
+					}
+				} else {
+					console.log("Error!");
+				}
+			});
+		});
+	}
+  
+	function login() {
+		FB.login(function(response) {
+			testAPI();
+		}, {scope: 'email,user_likes,read_stream,publish_stream'});
+	}
+	
+	function logout() {
+		FB.logout(function(response) {
+	});
+}
+</script>
+<a href="#" onclick="login();">Login with Facebook</a>
+<br>
+<a href="#" onclick="logout();">Logout</a>
+</body>
+</html>

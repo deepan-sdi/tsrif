@@ -1,0 +1,53 @@
+<?php	if(is_array($records) && count($records) > 0) {	?>
+<h3 class="recom-h3 visible-xs">Recommended Videos</h3>
+<dd class="col-md-5 col-xs-12 col-lg-4">
+<?php		$recommendedVideos	= array_splice($records, 0, 3);
+			foreach($recommendedVideos as $key => $value) {
+				$videoUrl	= '/video/'.base64_encode((string)$value['_id']); ?>
+	<div class="recom-videos">
+       	<a title="<?php echo $value['media_title']; ?>" href="<?php	echo $videoUrl; ?>">
+			<img src="http://img.youtube.com/vi/<?php echo $this->customurl($value['media_url'], 'fetchYoutubeID'); ?>/0.jpg" alt="<?php echo $value['media_title']; ?>">
+			<span class="play-btn"><i class="fa fa-play fa-2"></i></span>
+		</a>
+	</div>
+	<h4><a title="<?php echo $value['media_title']; ?>" href="<?php	echo $videoUrl; ?>"><?php	echo $this->text($value['media_title'], 25, 'displayText'); ?></a></h4>
+	<div class="row videoFrame">
+       	<div class="col-md-4 col-xs-3 pull-right">
+           	<ul class="likes">
+               	<li>
+                   	<a class="like" href="#" onclick='dovote(1, "<?php	echo base64_encode((string)$value['_id']); ?>", "<?php echo $value['media_title']; ?>");return false;'><i class="fa fa-2x fa-thumbs-up"></i></a>
+				</li>
+                   <li>
+                   	<a class="dislike" href="#" onclick='dovote(2, "<?php	echo base64_encode((string)$value['_id']); ?>", "<?php echo $value['media_title']; ?>");return false;'><i class="fa fa-2x fa-thumbs-down"></i></a>
+				</li>
+			</ul>
+		</div>
+           <div class="col-md-8 col-xs-9 pull-left recom-videos">
+           	<ul class="users"> 
+<?php		if(isset($extended['media'][(string)$value['_id']]) && is_array($extended['media'][(string)$value['_id']]) && count($extended['media'][(string)$value['_id']]) > 0) {
+				$inc 		= 0;
+				$userCount	= count($extended['media'][(string)$value['_id']]);
+				$iuserCount	= ($userCount > 4) ? 3 : 4;
+				foreach($extended['media'][(string)$value['_id']] as $ikey => $ivalue) {
+					if($inc < $iuserCount) {
+						$userPhoto	= (isset($extended['friends'][$ivalue]['user_photo']) && trim($extended['friends'][$ivalue]['user_photo']) != '') ? '/Front/users/photo/thumb/'.$extended['friends'][$ivalue]['user_photo'] : '/Front/users/photo/thumb/no_photo.png';
+						$userPhoto	= (file_exists(getcwd().'/public/'.$userPhoto)) ? $userPhoto : '/Front/users/photo/thumb/no_photo.png'; ?>
+				<li><a href="#"><img src="<?php echo $userPhoto; ?>" width="30" height="30" alt="<?php echo ucwords($extended['friends'][$ivalue]['user_firstname'].' '.$extended['friends'][$ivalue]['user_lastname']); ?>" title="<?php echo ucwords($extended['friends'][$ivalue]['user_firstname'].' '.$extended['friends'][$ivalue]['user_lastname']); ?>"></a></li>
+<?php				}
+					$inc++;
+				}
+				if(count($extended['media'][(string)$value['_id']]) > 4) {	?>
+				<li class="more"><a href="#" onclick="showExtendedFriends('<?php echo (string)$value['_id']; ?>');return false;">4+</a></li>
+<?php			}
+			} else { ?>
+				<li><a href="#" style="opacity:0;"></a></li>
+<?php		} ?>
+			</ul> 
+		</div>
+	</div>
+<?php		}
+			if($totalRecords > 3) { ?>
+	<a href="<?php	echo $this->url('recommended-videos'); ?>" class="btn btn-link">more videos</a>
+<?php		}	?>
+</dd>
+<?php	} ?>

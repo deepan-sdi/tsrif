@@ -1,0 +1,120 @@
+<div class="col-lg-9 b-left col-xs-12">
+<?php	//	Session
+		use Zend\Session\Container;
+		$userSession	= new Container('fo_user');
+		
+		if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') {	?>
+	<div class="mobil-inv clearfix visible-xs">
+		<?php	if($this->controller == 'Front\Controller\Friends' && $this->action == 'friends') { ?>
+		<div class="clearfix F-left"><a data-toggle="modal" data-target="#invite" class="btn invi-btn">Invite Friends </a></div>  
+		<?php	} else if($this->controller == 'Front\Controller\Search' && $this->action == 'contributed-videos') { ?>
+		<!-- <a href="#" class="btn link-pending"><img src="/Front/img/spacer.png" class="icon-pending wauto" alt="Pending Videos">Pending Videos</a>
+		<a href="#" class="btn link-approve"><img src="/Front/img/spacer.png" class="icon-approved wauto" alt="Approved Videos">Approved Videos</a> -->
+		<?php	} ?>
+		<div class="navbar-login navbar-right dropdown F-right">
+			<a class="btn btn-primary dropdown-toggle tab-fri" href="#" data-toggle="dropdown" version="1">My Account<b class="caret"></b></a>                
+			<ul aria-labelledby="drop3" role="menu" class="dropdown-menu">
+				<li role="presentation"><a href="#" tabindex="-1" role="menuitem" data-toggle="modal" data-target="#edit_profile_popup" onclick="resetProfileForm();"><i class="fa fa-edit"></i>Edit Profile </a></li>
+				<li class="divider" role="presentation"></li>
+				<li role="presentation"><a href="#" tabindex="-1" role="menuitem" data-toggle="modal" data-target="#Playlist" onclick="resetPlaylistForm();"><i class="fa fa-list-alt"></i>Playlist</a></li>
+				<li class="divider" role="presentation"></li>
+				<li role="presentation"><a href="<?php	echo $this->url('videos-watched'); ?>" tabindex="-1" role="menuitem"><i class="fa fa-video-camera"></i>Videos Watched</a></li>
+				<li class="divider" role="presentation"></li>
+				<?php	if(isset($userSession->userSession['user_group']) && $userSession->userSession['user_group'] == CONTRIBUTOR_GROUP_ID) { ?>
+				<li role="presentation"><a href="<?php	echo $this->url('suggested-videos'); ?>" tabindex="-1" role="menuitem"><i class="fa fa-check-square-o"></i>Suggested Videos</a></li>
+				<?php	} ?>
+				<li class="divider" role="presentation"></li>
+				<li role="presentation"><a href="<?php	echo $this->url('front', array('controller' => 'index', 'action' => 'logout')); ?>" onclick="showOverlay();" tabindex="-1" role="menuitem"><i class="fa fa-power-off"></i>Logout</a></li>
+			</ul>
+		</div>   
+		<?php	if($this->controller == 'Front\Controller\Search' && $this->action == 'contributed-videos') { ?>
+		<!-- <div class="page-title page-title1 clearfix">
+			<a href="#" class="btn link-pending"><img src="/Front/img/spacer.png" class="icon-pending wauto" alt="Pending Videos">Pending Videos</a>
+			<a href="#" class="btn link-approve"><img src="/Front/img/spacer.png" class="icon-approved wauto" alt="Approved Videos">Approved Videos</a>
+		</div> -->
+		<?php	} ?>
+	</div>
+<?php	} else { ?>        
+	<!-- Mobile -->
+	<div class="mobil-inv clearfix visible-xs">
+		<div class="navbar-login navbar-right dropdown F-right open">
+			<a href="#" class="btn btn-primary tab-ind hidden-lg tab-fri" data-toggle="modal" data-target="#login">Login</a>             
+		</div>                                       
+	</div>
+<?php	} ?>
+
+		<h2 class="page-title 
+		<?php	if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'contributed-videos' && 0) { ?>
+			hidden-sm 
+		<?php	} else if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'view-video') { ?>
+			hidden-lg hidden-xs 
+		<?php	} ?>">
+<?php		if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'filter') {	?>
+		Search Result - <span style="color:#ff934f;" id="video_count">videos found</span>
+<?php		} else if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'view-recommended') { ?>
+		Recommended Videos
+<?php		} else if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'view-watched') { ?>
+		Videos Watched
+<?php		} else if(isset($controller) && $controller == 'Front\Controller\Friends' && isset($action) && $action == 'friends') { ?>
+		Friends
+<?php		} else if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'top-videos') { ?>
+		Top Videos
+<?php		} else if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'contributed-videos') { ?>
+		Contribute Videos
+<?php		} else if(isset($controller) && $controller == 'Front\Controller\Index') {	?>
+		All Videos
+<?php		} else if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'playlist') { ?>
+			<span id="title_playlist_name"></span> Playlist - <span style="color:#ff934f;" id="video_count">videos found</span>
+<?php		}?>
+
+<?php	if(isset($userSession->userSession['_id']) && $userSession->userSession['_id'] != '') {	?>
+        <div class="navbar-login navbar-right dropdown hidden-lg hidden-xs">
+			<a class="btn btn-primary dropdown-toggle tab-fri" href="#" data-toggle="dropdown" version="2">My Account<b class="caret"></b></a>                
+	        <ul aria-labelledby="drop3" role="menu" class="dropdown-menu">
+	        	<li role="presentation"><a href="#" tabindex="-1" role="menuitem" data-toggle="modal" data-target="#edit_profile_popup" onclick="resetProfileForm();"><i class="fa fa-edit"></i>Edit Profile </a></li>
+	            <li class="divider" role="presentation"></li>
+	            <li role="presentation"><a href="#" tabindex="-1" role="menuitem"  data-toggle="modal" data-target="#Playlist" onclick="resetPlaylistForm();" ><i class="fa fa-list-alt"></i>Playlist</a></li>
+	            <li class="divider" role="presentation"></li>
+	            <li role="presentation"><a href="<?php	echo $this->url('videos-watched'); ?>" tabindex="-1" role="menuitem"><i class="fa fa-video-camera"></i>Videos Watched</a></li>
+	            <li class="divider" role="presentation"></li>
+				<?php	if(isset($userSession->userSession['user_group']) && $userSession->userSession['user_group'] == CONTRIBUTOR_GROUP_ID) { ?>
+				<li role="presentation"><a href="<?php	echo $this->url('suggested-videos'); ?>" tabindex="-1" role="menuitem"><i class="fa fa-check-square-o"></i>Suggested Videos</a></li>
+				<?php	} ?>
+				<li class="divider" role="presentation"></li>
+	            <li role="presentation"><a href="<?php	echo $this->url('front', array('controller' => 'index', 'action' => 'logout')); ?>" onclick="showOverlay();" tabindex="-1" role="menuitem"><i class="fa fa-power-off"></i>Logout</a></li>
+			</ul>
+		</div>
+		<?php	if($this->controller == 'Front\Controller\Friends' && $this->action == 'friends') { ?>
+		<a href="#" class="btn btn-primary invi-btn hidden-xs" data-toggle="modal" data-target="#invite">Invite Friends</a>
+		<?php	} ?>
+<?php	} else { ?>
+			
+			<!-- IPAD -->
+        	<a href="#" class="btn btn-primary tab-ind hidden-lg hidden-xs" data-toggle="modal" data-target="#login">Login</a>
+<?php	} ?>
+<?php	if($this->controller == 'Front\Controller\Search' && $this->action == 'contributed-videos') { ?>
+			<!-- <a href="#" class="btn link-pending hidden-xs"><img src="/Front/img/spacer.png" class="icon-pending wauto" alt="Pending Videos">Pending Videos</a>
+			<a href="#" class="btn link-approve hidden-xs"><img src="/Front/img/spacer.png" class="icon-approved wauto" alt="Approved Videos">Approved Videos</a> -->
+<?php	} ?>
+	</h2>
+<?php	if(isset($controller) && $controller == 'Front\Controller\Search' && isset($action) && $action == 'contributed-videos') { ?>
+<!-- <div class="visible-sm">
+	<div class="page-title clearfix">
+    	<div class="navbar-login navbar-right dropdown hidden-lg">
+		    <a class="btn btn-primary dropdown-toggle tab-fri" href="#" data-toggle="dropdown">My Account<b class="caret"></b></a>                
+		    <ul aria-labelledby="drop3" role="menu" class="dropdown-menu">
+				<li role="presentation"><a href="#" tabindex="-1" role="menuitem" data-toggle="modal" data-target="#edit_profile_popup" onclick="resetProfileForm();"><i class="fa fa-edit"></i>Edit Profile </a></li>
+				<li class="divider" role="presentation"></li>
+                <li role="presentation"><a href="#" tabindex="-1" role="menuitem"><i class="fa fa-list-alt"></i>Play List</a></li>
+                <li class="divider" role="presentation"></li>
+                <li role="presentation"><a href="<?php	echo $this->url('videos-watched'); ?>" tabindex="-1" role="menuitem"><i class="fa fa-video-camera"></i>Videos Watched</a></li>
+                <li class="divider" role="presentation"></li>
+                <li role="presentation"><a href="<?php	echo $this->url('front', array('controller' => 'index', 'action' => 'logout')); ?>" onclick="showOverlay();" tabindex="-1" role="menuitem"><i class="fa fa-power-off"></i>Logout</a></li>
+			</ul>
+		</div>
+        <a href="#" class="btn link-pending"><img src="/Front/img/spacer.png" class="icon-pending wauto" alt="Pending Videos">Pending Videos</a>
+        <a href="#" class="btn link-approve"><img src="/Front/img/spacer.png" class="icon-approved wauto" alt="Approved Videos">Approved Videos</a>
+	</div>
+    <h2 class="page-title">Contribute Videos</h2>                           
+</div> -->
+<?php	} ?>
